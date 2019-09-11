@@ -1,95 +1,103 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
+class App extends React.Component{
+
+  render  = () => {
   return (
     <div className="App-header">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-md btn-block">
+      <div className="container-fluid">
+        <div className="row" >
+          <div class="col-md-12" style={{ display: 'table' }} >
+            <input type="text" className="inpFormat" />
+            
+          </div>
+        </div>
+        <br />
+        <div className="row">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-md btn-block btnFormat">
               7
 			      </button>
           </div>
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-md btn-block">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-md btn-block btnFormat">
               8
 			      </button>
           </div>
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-md btn-block">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-md btn-block btnFormat">
               9
 			      </button>
           </div>
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-md btn-block">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-md btn-block btnFormat">
               /
 			      </button>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-block">
+        <div className="row">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-block btnFormat">
               4
 			      </button>
           </div>
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-block">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-block btnFormat">
               5
 			      </button>
           </div>
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-block">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-block btnFormat">
               6
 			      </button>
           </div>
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-block">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-block btnFormat">
               *
 			      </button>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-block">
+        <div className="row">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-block btnFormat">
               1
 			      </button>
           </div>
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-block">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-block btnFormat">
               2
 			      </button>
           </div>
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-block">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-block btnFormat">
               3
 			      </button>
           </div>
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-block">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-block btnFormat">
               -
 			      </button>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-block">
+        <div className="row">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-block btnFormat">
               .
 			      </button>
           </div>
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-block">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-block btnFormat">
               0
 			      </button>
           </div>
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-block">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-block btnFormat">
               =
 			      </button>
           </div>
-          <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-block">
+          <div className="col-md-3">
+            <button type="button" className="btn btn-success btn-block btnFormat">
               +
 			      </button>
           </div>
@@ -97,6 +105,7 @@ function App() {
       </div>
     </div>
   );
+}
 }
 
 export default App;

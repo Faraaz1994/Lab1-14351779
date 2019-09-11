@@ -31,3 +31,19 @@
     transform: rotate(360deg);
   }
 }
+
+.btnFormat{
+  padding: 20px;
+  font-size: 25px;
+  border-right: solid 2x #3C4857;
+  border-bottom: solid 10px #3C4857;
+  transition: all 0.2s ease-in-out;
+}
+.inpFormat{
+  display: table-cell;
+  width: 100% ;
+  text-align: right;
+  cursor : text;
+  height: 5rem;
+  
+}
