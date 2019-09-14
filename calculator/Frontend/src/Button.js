@@ -2,7 +2,7 @@ import React from 'react';
 
 class Button extends React.Component {
     handleClick = (event) => {
-        this.props.setStack(event.target.value);
+        this.props.clickEventHandler(event.target.value);
     }
 
     render = () => {
