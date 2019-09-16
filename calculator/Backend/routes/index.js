@@ -23,6 +23,7 @@ router.post('/', function (req, res, next) {
       res.send({ result : (parseFloat(leftOperand) / parseFloat(rightOperand)) });
       break;  
     default:
+      res.send({});
       break;
   }
 });
