@@ -5,7 +5,10 @@ import Login from './components/Login'
 import SignUp from './components/SignUp'
 import LoginResturant from './components/LoginResturant'
 import SignUpResturant from './components/SignUpResturant'
+import HomePage from './components/HomePage';
 import './App.css';
+import SearchPage from './components/SearchPage';
+
 
 class App extends React.Component {
   render() {
@@ -16,6 +19,9 @@ class App extends React.Component {
           <Route exact path="/SignUp" component={SignUp} />
           <Route exact path="/LoginResturant" component={LoginResturant} />
           <Route exact path="/SignUpResturant" component={SignUpResturant} />
+
+          <Route exact path="/HomePage" component={HomePage} />
+          <Route exact path="/SearchPage" component={SearchPage} />
         </div>
       </BrowserRouter>
     );

@@ -28,3 +28,11 @@
   color: #ffffff;
   font-size: 12px
 }
+
+.searchBar{ 
+  position: absolute;
+  z-index: 10;
+  top: 20rem;
+  left:7rem;
+  width: 100%
+}
