@@ -22,7 +22,7 @@ class Login extends React.Component {
     render = () => {
         return (
             <div className="App-header">
-                <form>
+                <form onSubmit={this.handleLogin}>
                     <div className="form-group">
                         <label for="emailId">Email</label>
                         <input type="email" className="form-control" id="emailId" aria-describedby="emailHelp" placeholder="Enter email adress" required />
@@ -31,7 +31,7 @@ class Login extends React.Component {
                         <label for="password">Password</label>
                         <input type="password" className="form-control" id="password" placeholder="Enter the Password" required />
                     </div>
-                    <button type="submit" value="login" onClick={this.handleLogin} className="btn btn-secondary btn-lg btn-block">Login</button>
+                    <button type="submit" value="login"  className="btn btn-secondary btn-lg btn-block">Login</button>
                 </form>
                 <Link to="/SignUpResturant" className="loginLink">Create an account</Link>
             </div >

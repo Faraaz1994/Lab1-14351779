@@ -36,3 +36,32 @@
   left:7rem;
   width: 100%
 }
+.checked {
+  color: orange;
+}
+.searchPageImageThumbnail{
+  width: 100px;
+  height: 100px;
+}
+.searchPageTD{
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+.clm-l {
+  float: left;
+  width: 80%;
+  padding: 2rem;
+  height: 100vh;
+}
+.clm-s {
+  float: left;
+  width: 20%;
+  padding: 10px;
+  height: 100vh;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}

@@ -35,33 +35,33 @@ class SignUp extends React.Component {
     render = () => {
         return (
             <div className="App-header">
-                <form>
+                <form onSubmit={this.handleSignIn}>
                     <div className="form-row">
                         <div className="form-group col-md-6">
                             <label>First Name</label>
-                            <input type="text" className="form-control" id="FName" placeholder="First Name" />
+                            <input type="text" className="form-control" id="FName" placeholder="First Name" required />
                         </div>
                         <div className="form-group col-md-6">
                             <label >Last Name</label>
-                            <input type="text" className="form-control" id="LName" placeholder="Last Name" />
+                            <input type="text" className="form-control" id="LName" placeholder="Last Name" required/>
                         </div>
                     </div>                   
                      <div className="form-group">
                         <label>Resturant name</label>
-                        <input type="text" className="form-control" id="RName" placeholder="Resturant Name" />
+                        <input type="text" className="form-control" id="RName" placeholder="Resturant Name" required/>
                     </div>
                     <div className="form-group">
                         <label>Address</label>
-                        <input type="text" className="form-control" id="Address" placeholder="1234 Main St" />
+                        <input type="text" className="form-control" id="Address" placeholder="1234 Main St" required/>
                     </div>
                     <div className="form-row">
                         <div className="form-group col-md-6">
                             <label >City</label>
-                            <input type="text" className="form-control" id="City" />
+                            <input type="text" className="form-control" id="City" required/>
                         </div>
                         <div className="form-group col-md-4">
                             <label>State</label>
-                            <select id="State" className="form-control">
+                            <select id="State" className="form-control" required>
                                 <option selected>Choose...</option>
                                 <option>CA</option>
                                 <option>CA</option>
@@ -74,20 +74,20 @@ class SignUp extends React.Component {
                         </div>
                         <div className="form-group col-md-2">
                             <label >Zip</label>
-                            <input type="text" className="form-control" id="Zip" />
+                            <input type="text" className="form-control" id="Zip" required/>
                         </div>
                     </div>
                     <div className="form-row">
                         <div className="form-group col-md-12">
                             <label >Email</label>
-                            <input type="email" className="form-control" id="Email" placeholder="Email" />
+                            <input type="email" className="form-control" id="Email" placeholder="Email" required/>
                         </div>
                         <div className="form-group col-md-12">
                             <label>Password</label>
-                            <input type="password" className="form-control" id="Password" placeholder="Password" />
+                            <input type="password" className="form-control" id="Password" placeholder="Password" required/>
                         </div>
                     </div>
-                    <button type="submit" className="btn btn-secondary btn-lg btn-block" onClick={this.handleSignIn}>Sign in</button>
+                    <button type="submit" className="btn btn-secondary btn-lg btn-block" >Sign in</button>
                 </form>
             </div>
         )

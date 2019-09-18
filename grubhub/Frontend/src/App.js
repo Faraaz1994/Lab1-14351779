@@ -8,6 +8,7 @@ import SignUpResturant from './components/SignUpResturant'
 import HomePage from './components/HomePage';
 import './App.css';
 import SearchPage from './components/SearchPage';
+import DetailsPage from './components/DetailsPage';
 
 
 class App extends React.Component {
@@ -22,6 +23,7 @@ class App extends React.Component {
 
           <Route exact path="/HomePage" component={HomePage} />
           <Route exact path="/SearchPage" component={SearchPage} />
+          <Route exact path="/DetailsPage" component={DetailsPage} />
         </div>
       </BrowserRouter>
     );

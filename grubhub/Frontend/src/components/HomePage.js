@@ -1,64 +1,54 @@
 import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import img1 from './images/img1.jpg'
 import img2 from './images/img2.jpg'
 import img3 from './images/img3.jpg'
 import img4 from './images/img4.jpg'
 import img5 from './images/img5.jpg'
 import img6 from './images/img6.jpg'
+import Navbar from './Navbar'
 
 
 class HomePage extends React.Component {
 
-    state ={
-        isRedirect : false
+    state = {
+        isRedirect: false
     }
 
-    handleClick = () =>{
+    handleClick = () => {
         this.setState({
-            isRedirect : true
+            isRedirect: true
         })
     }
     render = () => {
 
-        if(this.state.isRedirect){
-            return  <Redirect to='/SearchPage' />
+        if (this.state.isRedirect) {
+            return <Redirect to={{
+                pathname: '/SearchPage',
+                state: {
+                    dish: document.getElementById("dish").value,
+                    zip : document.getElementById("zip").value
+                }
+            }} />
+
         }
-        
+
         return (
             <div>
-                <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-                    <a class="navbar-brand" href="#">Navbar</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Link</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Link</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Link</a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
+                <Navbar />
                 <div class="bd-example" >
                     <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
                         <div class="form-group searchBar">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-6">
-                                        <input type="text" class="form-control input-lg" placeholder="Enter the dish" />
+                                        <input type="text" class="form-control input-lg" id="dish" placeholder="Enter the dish" />
                                     </div>
                                     <div class="col-3">
-                                        <input type="text" class="form-control input-lg" name="start" placeholder="zip code" />
+                                        <input type="text" class="form-control input-lg" id="zip" placeholder="zip code" />
                                     </div>
                                     <div class="col-3">
-                                        <button class="btn btn-success" onClick={this.handleClick} role="button">GO</button>
+                                        <button class="btn btn-success" onClick={this.handleClick} >GO</button>
                                     </div>
                                 </div>
                             </div>

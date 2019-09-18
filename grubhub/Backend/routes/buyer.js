@@ -14,7 +14,14 @@ router.post('/', function (req, response, next) {
   console.log(email, pwd);
   let query = "select email_id,password from buyer where email_id = ?";
   connection.query(query, [email], function (err, res) {
-    if (err) response.json({ error: true, msg: "Operation failed", details: err });
+    if (err) {
+      response.json({ error: true, msg: "Operation failed", details: err });
+    }
+
+    if (res.length < 1) {
+      response.json({ error: true, msg: "Invalid Email ID", details: err });
+      return
+    }
 
     authenticate(pwd, res[0].password).then((match) => {
       if (match) {
