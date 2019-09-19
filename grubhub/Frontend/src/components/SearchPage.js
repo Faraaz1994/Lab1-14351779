@@ -36,7 +36,9 @@ class SearchPage extends React.Component {
     handleResturantClick = (event) => {
         this.setState({
             isRedirect: true,
-            resturantId: event.currentTarget.getAttribute("data-resturantid")
+            resturantId: event.currentTarget.getAttribute("data-resturantid"),
+            resturant_name: event.currentTarget.getAttribute("data-resturant_name"),
+            cuisine: event.currentTarget.getAttribute("data-cuisine")
         })
     }
     handleFilter = (event) => {
@@ -51,7 +53,7 @@ class SearchPage extends React.Component {
         return rows.map((resturant, index) => {
             const { id, resturant_name, cuisine } = resturant;
             return (
-                <tr onClick={this.handleResturantClick} data-resturantid={id}>
+                <tr onClick={this.handleResturantClick} data-resturantid={id} data-resturant_name={resturant_name} data-cuisine={cuisine}>
                     <th className="searchPageTD" scope="row">{index + 1}</th>
                     <td className="w-25 searchPageTD">
                         <img src={img5} className="img-fluid img-thumbnail searchPageImageThumbnail" alt="" />
@@ -86,7 +88,9 @@ class SearchPage extends React.Component {
             return <Redirect to={{
                 pathname: '/DetailsPage',
                 state: {
-                    resturantId: this.state.resturantId
+                    resturantId: this.state.resturantId,
+                    resturant_name : this.state.resturant_name,
+                    cuisine : this.state.cuisine
                 }
             }} />
 
