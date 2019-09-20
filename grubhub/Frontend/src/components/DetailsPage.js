@@ -20,21 +20,55 @@ class DetailPage extends React.Component {
     }
 
     componentDidMount() {
+
+        //called before opening the modal
         window.$('#exampleModalCenter').on('show.bs.modal', function (event) {
-            debugger
+            window.$.find("#inpQty")[0].value = 1;
             const price = window.$(event.relatedTarget)[0].dataset.price;
             window.$(this).find(".price").text("$ " + price);
         });
+
+        //called after the user inputs the qty and clicks on order
         window.$("#btnOrder").on("click", function (event) {
             let items = this.state.shoppingCart;
             let itemName = this.state.latestItemName;
-            let itemId = this.state.latestitemid;
-            items.push({
-                price: window.$.find(".price")[0].innerText.substring(2),
-                qty: window.$.find("#inpQty")[0].value,
-                itemName : itemName,
-                itemId : itemId
-            })
+            let itemId = this.state.latestItemId;
+            let bPush = true;
+            let totalPrice = 0;
+            debugger
+            //check  of item is already present in the cart
+            for (let i = 0; i < items.length - 1; i++) {
+                if (items[i].itemId === itemId) {
+                    items[i].qty = parseInt(items[i].qty) + parseInt(window.$.find("#inpQty")[0].value);
+                    items[i].price = parseFloat(items[i].price) + parseFloat(window.$.find(".price")[0].innerText.substring(2))
+                    bPush = false;
+                }
+                totalPrice += items[i].price;
+            }
+            if (bPush) {
+                items.splice(items.length - 1, 0, {
+                    price: parseFloat(window.$.find(".price")[0].innerText.substring(2)),
+                    qty: parseInt(window.$.find("#inpQty")[0].value),
+                    itemName: itemName,
+                    itemId: itemId
+                })
+                totalPrice += parseFloat(window.$.find(".price")[0].innerText.substring(2));
+            }
+
+            //push the total price
+            if (items.length === 1) {
+                totalPrice = items[0].price;
+                items.push({
+                    price: totalPrice,
+                    qty: "",
+                    itemName: "Cart total",
+                    itemId: ""
+                })
+            }
+            else {
+                items[items.length - 1].price = totalPrice
+            }
+
             this.setState({
                 shoppingCart: items
             })
@@ -150,6 +184,7 @@ class DetailPage extends React.Component {
         )
     }
     calculatePrice = (event) => {
+        debugger
         const qty = event.target.value;
         const price = window.$.find("#modalButton")[0].dataset.price;
         window.$.find(".price")[0].innerText = "$ " + (qty * price);
@@ -180,31 +215,40 @@ class DetailPage extends React.Component {
         }
         return cards;
     }
-    deleteItem = (event) =>{
-        console.log("delete",event.target.dataset.index);
+    deleteItem = (event) => {
         let items = this.state.shoppingCart;
-        items.splice(event.target.dataset.index,1);
+        items.splice(event.target.dataset.index, 1);
+        items[items.length - 1].price = 0;
+        for (let i = 0; i < items.length - 1; i++) {
+            items[items.length - 1].price += items[i].price;
+        }
+        if (items.length == 1) {
+            items = []
+        }
         this.setState({
-            shoppingCart : items
+            shoppingCart: items
         })
     }
 
     renderShoppingCart = () => {
         var that = this;
         return this.state.shoppingCart.map((item, index) => {
-            const { itemName,qty, price } = item;
+            const { itemName, qty, price, itemId } = item;
             return (
                 <tr>
-                    <th scope="row">{index + 1}</th>
+                    <th scope="row">{itemId && index + 1}</th>
                     <th>{itemName}</th>
                     <th>{qty} </th>
                     <th>{price}</th>
-                    <span onClick={that.deleteItem}>
-                    <i class="fa fa-trash" aria-hidden="true" data-index={index}></i>
-                    </span>
+                    <th onClick={that.deleteItem}>
+                        {itemId && <i class="fa fa-trash" aria-hidden="true" data-index={index}></i>}
+                    </th>
                 </tr>
             )
         });
+    }
+    placeOrder = () =>{
+        
     }
     render = () => {
         return (
@@ -224,12 +268,13 @@ class DetailPage extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div class="clm-s" style={{ backgroundColor: "#bbb" }}>
-                        <table class="table table-sm table-dark">
+                    <div class="clm-s" style={{ backgroundColor: "#343a40" }}>
+                        <table class="table  table-dark">
                             <tbody>
                                 {this.renderShoppingCart()}
                             </tbody>
                         </table>
+                        {this.state.shoppingCart.length == 0 ? null : <button type="button" class="btn btn-secondary btn-lg btn-block" onClick={this.placeOrder}>Place Order</button>}
                     </div>
                 </div>
                 {this.openModal()}
