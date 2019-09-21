@@ -184,7 +184,6 @@ class DetailPage extends React.Component {
         )
     }
     calculatePrice = (event) => {
-        debugger
         const qty = event.target.value;
         const price = window.$.find("#modalButton")[0].dataset.price;
         window.$.find(".price")[0].innerText = "$ " + (qty * price);
@@ -247,8 +246,30 @@ class DetailPage extends React.Component {
             )
         });
     }
-    placeOrder = () =>{
-        
+    placeOrder = () => {
+        const { resturantId } = this.props.location.state;
+        const { shoppingCart } = this.state;
+        var that = this;
+        axios.post('/order', {
+            resturantId: resturantId,
+            items: shoppingCart
+        })
+            .then(function (response) {
+                console.log(response);
+                if (response.data.error === false) {
+                    that.setState({
+                        shoppingCart: []
+                    });
+                    console.log("order place sucesfullly")
+                }
+                else {
+                    console.log("failed");
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
     }
     render = () => {
         return (

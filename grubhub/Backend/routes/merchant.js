@@ -12,13 +12,14 @@ router.get('/', function (req, res, next) {
 router.post('/', function (req, response, next) {
     const { email, pwd } = req.body;
     console.log(email, pwd);
-    let query = "select email_id,password from merchant where email_id = ?";
+    let query = "select id,email_id,password from merchant where email_id = ?";
     connection.query(query, [email], function (err, res) {
         if (err) response.json({ error: true, msg: "Operation failed", details: err });
 
         authenticate(pwd, res[0].password).then((match) => {
             if (match) {
                 console.log("authenticated");
+                req.session.user = {id : res[0].id,email : res[0].email_id};
                 response.json({ error: false, msg: "Succesfully logged in", details: res });
             }
             else {

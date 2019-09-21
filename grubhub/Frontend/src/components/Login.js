@@ -1,5 +1,6 @@
 import { Link, Redirect } from 'react-router-dom';
 import React from 'react';
+import cookie from 'react-cookies';
 const axios = require('axios');
 
 
@@ -36,8 +37,8 @@ class Login extends React.Component {
             });
     }
     render = () => {
-
-        if (this.state.isAuthenticated) {
+        
+        if (this.state.isAuthenticated || cookie.load('cookie') ) {
             return <Redirect to='/HomePage' />
         }
         else {
