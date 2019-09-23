@@ -1,44 +1,19 @@
 import { Link, Redirect } from 'react-router-dom';
 import React from 'react';
 import cookie from 'react-cookies';
-const axios = require('axios');
+import { connect } from 'react-redux';
+import { authenticateLogin } from './actions/LoginActions'
 
 
-class Login extends React.Component {
-
-    state = {
-        isAuthenticated: false
-    }
-
+class Login extends React.Component {    
     handleLogin = (event) => {
         event.preventDefault();
         const email = document.getElementById("emailId").value;
         const pwd = document.getElementById("password").value;
-        var that = this;
-        axios.post('/buyer', {
-            email: email,
-            pwd: pwd
-        })
-            .then(function (response) {
-                console.log(response);
-                if (response.data.error === false) {
-                    that.setState({
-                        isAuthenticated: true
-                    })
-                }
-                else {
-                    that.setState({
-                        isAuthenticated: false
-                    })
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        this.props.authenticateLogin(email,pwd);        
     }
     render = () => {
-        
-        if (this.state.isAuthenticated || cookie.load('cookie') ) {
+        if (this.props.isAuthenticated || cookie.load('cookie') ) {
             return <Redirect to='/HomePage' />
         }
         else {
@@ -64,4 +39,15 @@ class Login extends React.Component {
     }
 }
 
-export default Login
+const mapStateToProps = (state)=>{
+    return {
+        isAuthenticated : state.LoginReducer.isAuthenticated
+    }
+}
+const mapDispatchToProps= (dispatch)=>{
+    return{
+        authenticateLogin: (email,pwd)=>{dispatch(authenticateLogin(email,pwd,'/buyer'))}
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Login)

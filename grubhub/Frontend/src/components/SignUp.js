@@ -10,7 +10,7 @@ class SignUp extends React.Component {
 
     handleSignIn = (event) => {
         event.preventDefault();
-        const FullName = document.getElementById("FName").value + document.getElementById("LName").value;
+        const FullName = document.getElementById("FName").value +" "+ document.getElementById("LName").value;
         const Address = document.getElementById("Address").value;
         const City = document.getElementById("City").value
         let State = document.getElementById("State");

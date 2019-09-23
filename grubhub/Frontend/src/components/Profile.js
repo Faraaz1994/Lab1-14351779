@@ -1,59 +1,115 @@
 import { Redirect } from 'react-router-dom';
 import React from 'react';
 import img6 from './images/img6.jpg'
+import { connect } from 'react-redux';
+import { fetchProfile, updateProfile } from './actions/LoginActions'
+import BusyIndicator from './BusyIndicator'
+
 
 class Profile extends React.Component {
+    componentDidMount() {
+        this.props.fetchProfile();
+    }
+    handleupdate = (event) => {
+        event.preventDefault();
+        const full_name = document.getElementById("FName").value;
+        const street = document.getElementById("Address").value;
+        const city = document.getElementById("City").value
+        let state = document.getElementById("State");
+        state = state.item(state.selectedIndex).value;
+        const email_id = document.getElementById("Email").value;
+        const zipcode = document.getElementById("Zip").value;
+        const mobile_no = document.getElementById("mobileno").value;
+        var that = this;
+        this.props.updateProfile({
+            full_name,
+            email_id,
+            address_id: that.props.profileDetails[0].address_id,
+            mobile_no,
+            street,
+            city,
+            state,
+            zipcode,
+            id: that.props.profileDetails[0].id
+        })
+
+    }
+    openImageUploader = (event) => {
+        this.refs.fileUploader.click();
+    }
 
     render() {
+        if (!this.props.profileDetails) {
+            return <BusyIndicator />
+        }
         return (
             <div className="App-header">
-                <img src={img6} alt="Avatar" class="avatar" />
+                <input type="image" src={img6} alt="Avatar" class="avatar" onClick={this.openImageUploader} />
+                <input type="file" id="file" ref="fileUploader" style={{ display: "none" }} />
                 <br /> <br />
-                <form onSubmit={this.handleSignIn}>
+                <form onSubmit={this.handleupdate}>
                     <div className="form-row">
-                        <div className="form-group col-md-6">
-                            <input type="text" className="form-control" id="FName" placeholder="First Name" required />
-                        </div>
-                        <div className="form-group col-md-6">
-                            <input type="text" className="form-control" id="LName" placeholder="Last Name" required />
+                        <div className="form-group col-md-12">
+                            <input type="text" className="form-control" name="full_name"
+                                id="FName" required defaultValue={this.props.profileDetails[0].full_name}
+                            />
                         </div>
                     </div>
                     <div className="form-group">
-                        <input type="text" className="form-control" id="Address" placeholder="1234 Main St" required />
+                        <input type="text" className="form-control" id="Address"
+                            required defaultValue={this.props.profileDetails[0].street} name="street" />
                     </div>
                     <div className="form-row">
                         <div className="form-group col-md-6">
-                            <input type="text" className="form-control" id="City" required />
+                            <input type="text" className="form-control" id="City" name="city"
+                                required defaultValue={this.props.profileDetails[0].city} />
+
                         </div>
                         <div className="form-group col-md-4">
-                            <select id="State" className="form-control" required>
-                                <option selected>Choose...</option>
+                            <select id="State" className="form-control" required defaultValue={this.props.profileDetails[0].state} >
                                 <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
+                                <option>AZ</option>
+                                <option>AS</option>
+                                <option>FG</option>
+                                <option>QW</option>
+                                <option>PO</option>
+                                <option>QW</option>
                             </select>
                         </div>
                         <div className="form-group col-md-2">
-                            <input type="text" className="form-control" id="Zip" required />
+                            <input type="text" className="form-control" id="Zip" name="zipcode"
+                                required defaultValue={this.props.profileDetails[0].zipcode} />
                         </div>
                     </div>
                     <div className="form-row">
                         <div className="form-group col-md-12">
-                            <input type="email" className="form-control" id="Email" placeholder="Email" required />
+                            <input type="email" className="form-control" id="Email" required
+                                defaultValue={this.props.profileDetails[0].email_id} name="email_id" />
+                        </div>
+                        <div className="form-group col-md-12">
+                            <input type="text" className="form-control" id="mobileno" name="mobile_no"
+                                placeholder="Mobile number" required defaultValue={this.props.profileDetails[0].mobile_no} />
                         </div>
                     </div>
                     <button type="submit" className="btn btn-secondary btn-lg btn-block">Update</button>
                 </form>
             </div>
-
-
         )
     }
 
 }
 
-export default Profile;
+const mapStateToProps = (state) => {
+    return {
+        profileDetails: state.ProfileReducer.profileDetails,
+        updateDetails: state.ProfileReducer.updateDetails
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchProfile: (id) => { dispatch(fetchProfile(id,'/buyer')) },
+        updateProfile: (profileDetails) => { dispatch(updateProfile(profileDetails,'/buyer')) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile)

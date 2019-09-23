@@ -10,6 +10,7 @@ import SearchPage from './components/SearchPage';
 import DetailsPage from './components/DetailsPage';
 import Profile from './components/Profile';
 import ProfileResturant from './components/ProfileResturant';
+import HomePageResturant from './components/HomePageResturant';
 
 import './App.css';
 
@@ -22,6 +23,7 @@ class App extends React.Component {
           <Route exact path="/SignUp" component={SignUp} />
           <Route exact path="/LoginResturant" component={LoginResturant} />
           <Route exact path="/SignUpResturant" component={SignUpResturant} />
+          <Route exact path="/HomePageResturant" component={HomePageResturant} />
           
           <Route exact path="/Profile" component={Profile} />
           <Route exact path="/ProfileResturant" component={ProfileResturant} />
