@@ -1,15 +1,16 @@
 import { LOGIN } from "../actions/action-types/ActionTypes";
-const axios = require('axios');
 
 
 const initState ={
-    isAuthenticated : null
+    isAuthenticated : null,
+    full_name : null
 }
 
 const LoginReducer = (state = initState,action) =>{
      if(action.type === LOGIN){
         return {
-            isAuthenticated : action.isAuthenticated
+            isAuthenticated : action.loginDetails.isAuthenticated,
+            full_name : action.loginDetails.full_name
         }
     }
     return state

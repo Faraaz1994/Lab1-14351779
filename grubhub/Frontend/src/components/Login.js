@@ -5,15 +5,22 @@ import { connect } from 'react-redux';
 import { authenticateLogin } from './actions/LoginActions'
 
 
-class Login extends React.Component {    
+class Login extends React.Component {
     handleLogin = (event) => {
         event.preventDefault();
         const email = document.getElementById("emailId").value;
         const pwd = document.getElementById("password").value;
-        this.props.authenticateLogin(email,pwd);        
+        this.props.authenticateLogin(email, pwd);
+    }
+    displayError =()=>{
+        return(
+            <div class="alert alert-danger" role="alert">
+                {this.props.Error.errorText}
+            </div>
+        )
     }
     render = () => {
-        if (this.props.isAuthenticated || cookie.load('cookie') ) {
+        if (this.props.isAuthenticated || cookie.load('cookie')) {
             return <Redirect to='/HomePage' />
         }
         else {
@@ -28,10 +35,11 @@ class Login extends React.Component {
                             <label for="password">Password</label>
                             <input type="password" className="form-control" id="password" placeholder="Enter the Password" required />
                         </div>
-                        <button type="submit" value="login"  className="btn btn-secondary btn-lg btn-block">Login</button>
+                        <button type="submit" value="login" className="btn btn-secondary btn-lg btn-block">Login</button>
                     </form>
                     <Link to="/signup" className="loginLink">Create an account</Link>
                     <Link to="/LoginResturant" className="loginLink">Resturants</Link>
+                    {this.props.Error.isError && this.displayError() }
                 </div >
             )
         }
@@ -39,15 +47,17 @@ class Login extends React.Component {
     }
 }
 
-const mapStateToProps = (state)=>{
+const mapStateToProps = (state) => {
     return {
-        isAuthenticated : state.LoginReducer.isAuthenticated
+        isAuthenticated: state.LoginReducer.isAuthenticated,
+        full_name: state.LoginReducer.full_name,
+        Error: state.ErrorReducer,
     }
 }
-const mapDispatchToProps= (dispatch)=>{
-    return{
-        authenticateLogin: (email,pwd)=>{dispatch(authenticateLogin(email,pwd,'/buyer'))}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        authenticateLogin: (email, pwd) => { dispatch(authenticateLogin(email, pwd, '/buyer')) }
     }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(Login)
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

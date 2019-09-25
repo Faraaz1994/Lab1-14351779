@@ -9,6 +9,7 @@ import img6 from './images/img6.jpg'
 import Navbar from './Navbar'
 
 
+
 class HomePage extends React.Component {
 
     state = {
@@ -107,4 +108,5 @@ class HomePage extends React.Component {
         )
     }
 }
-export default HomePage
+
+export default HomePage;

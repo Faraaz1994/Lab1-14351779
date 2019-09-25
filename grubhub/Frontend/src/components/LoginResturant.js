@@ -11,9 +11,14 @@ class Login extends React.Component {
         const pwd = document.getElementById("password").value;
         this.props.authenticateLogin(email, pwd);
     }
+    displayError = () => {
+        return (
+            <div class="alert alert-danger" role="alert">
+                {this.props.Error.errorText}
+            </div>
+        )
+    }
     render = () => {
-        debugger
-        console.log(this.props);
         if (this.props.isAuthenticated || cookie.load('cookie')) {
             return <Redirect to='/HomePageResturant' />
         }
@@ -32,6 +37,7 @@ class Login extends React.Component {
                         <button type="submit" value="login" className="btn btn-secondary btn-lg btn-block">Login</button>
                     </form>
                     <Link to="/SignUpResturant" className="loginLink">Create an account</Link>
+                    {this.props.Error.isError && this.displayError() }
                 </div >
             )
 
@@ -41,12 +47,13 @@ class Login extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        isAuthenticated: state.LoginReducer.isAuthenticated
+        isAuthenticated: state.LoginReducer.isAuthenticated,
+        Error: state.ErrorReducer,
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        authenticateLogin: (email,pwd)=>{dispatch(authenticateLogin(email,pwd,'/merchant'))}
+        authenticateLogin: (email, pwd) => { dispatch(authenticateLogin(email, pwd, '/merchant')) }
     }
 }
 

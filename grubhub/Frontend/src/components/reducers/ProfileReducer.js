@@ -1,26 +1,50 @@
-import { FETCHPROFILEBUYER ,UPDATEPROFILEBUYER } from "../actions/action-types/ActionTypes";
+import { FETCHPROFILEBUYER, UPDATEPROFILEBUYER, CREATEPROFILE, LOADING ,FETCHRESTURANTIMAGE} from "../actions/action-types/ActionTypes";
 const axios = require('axios');
 
-const initState ={
-    profileDetails : null,
-    updateDetails : null
+const initState = {
+    profileDetails: null,
+    isLoading: null,
+    resturantImages : null,
+    isAccountCreated: null,
 }
 
-const ProfileReducer = (state = initState,action) =>{
-     if(action.type === FETCHPROFILEBUYER){
+const ProfileReducer = (state = initState, action) => {
+    if (action.type === FETCHPROFILEBUYER) {
         return {
             ...state,
-            profileDetails : action.profileDetails
+            isLoading: false,
+            profileDetails: action.profileDetails
         }
     }
-     else if(action.type === UPDATEPROFILEBUYER){
+    else if (action.type === UPDATEPROFILEBUYER) {
         return {
             ...state,
-            updateDetails : action.updateDetails
+            isLoading: false
+        }
+    }
+    else if (action.type === CREATEPROFILE) {
+        return {
+            ...state,
+            isLoading: false,
+            isAccountCreated: action.isAccountCreated
+        }
+
+    }
+    else if (action.type === LOADING) {
+        return {
+            ...state,
+            isLoading: action.isLoading
+        }
+    }
+    else if (action.type === FETCHRESTURANTIMAGE) {
+        return {
+            ...state,
+            isLoading: false,
+            resturantImages : action.resturantImages
         }
     }
     return state
-    
+
 }
 
 export default ProfileReducer;

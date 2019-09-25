@@ -2,9 +2,10 @@ import { Redirect } from 'react-router-dom';
 import React from 'react';
 import img6 from './images/img6.jpg'
 import { connect } from 'react-redux';
-import { fetchProfile, updateProfile } from './actions/LoginActions'
+import { fetchProfile, updateProfile,updateImage } from './actions/LoginActions'
 import BusyIndicator from './BusyIndicator'
-
+import Navbar from './Navbar'
+const axios = require('axios');
 
 class Profile extends React.Component {
     componentDidMount() {
@@ -37,62 +38,74 @@ class Profile extends React.Component {
     openImageUploader = (event) => {
         this.refs.fileUploader.click();
     }
+    handleImageUpload = (file) => {
+        const formData = new FormData()
+        formData.append(
+          'profileImage',
+          file,
+          file.name
+        );
+        this.props.updateImage(formData);
+    }
 
     render() {
-        if (!this.props.profileDetails) {
+        if (this.props.profileDetails == null || this.props.isLoading ) {
             return <BusyIndicator />
         }
         return (
-            <div className="App-header">
-                <input type="image" src={img6} alt="Avatar" class="avatar" onClick={this.openImageUploader} />
-                <input type="file" id="file" ref="fileUploader" style={{ display: "none" }} />
-                <br /> <br />
-                <form onSubmit={this.handleupdate}>
-                    <div className="form-row">
-                        <div className="form-group col-md-12">
-                            <input type="text" className="form-control" name="full_name"
-                                id="FName" required defaultValue={this.props.profileDetails[0].full_name}
-                            />
+            <div>
+                <Navbar />
+                <div className="App-header">
+                    <input type="image" src={this.props.profileDetails[0].profile_image} alt="Avatar" class="avatar" onClick={this.openImageUploader} />
+                    <input type="file" id="file" ref="fileUploader" style={{ display: "none" }} onChange={(e) => this.handleImageUpload(e.target.files[0])} />
+                    <br /> <br />
+                    <form onSubmit={this.handleupdate}>
+                        <div className="form-row">
+                            <div className="form-group col-md-12">
+                                <input type="text" className="form-control" name="full_name"
+                                    id="FName" required defaultValue={this.props.profileDetails[0].full_name}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="form-group">
-                        <input type="text" className="form-control" id="Address"
-                            required defaultValue={this.props.profileDetails[0].street} name="street" />
-                    </div>
-                    <div className="form-row">
-                        <div className="form-group col-md-6">
-                            <input type="text" className="form-control" id="City" name="city"
-                                required defaultValue={this.props.profileDetails[0].city} />
+                        <div className="form-group">
+                            <input type="text" className="form-control" id="Address"
+                                required defaultValue={this.props.profileDetails[0].street} name="street" />
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-md-5">
+                                <input type="text" className="form-control" id="City" name="city"
+                                    required defaultValue={this.props.profileDetails[0].city} />
 
+                            </div>
+                            <div className="form-group col-md-4">
+                                <select id="State" className="form-control" required defaultValue={this.props.profileDetails[0].state} >
+                                    <option>CA</option>
+                                    <option>AZ</option>
+                                    <option>AS</option>
+                                    <option>FG</option>
+                                    <option>QW</option>
+                                    <option>PO</option>
+                                    <option>QW</option>
+                                </select>
+                            </div>
+                            <div className="form-group col-md-3">
+                                <input type="text" className="form-control" id="Zip" name="zipcode"
+                                    required defaultValue={this.props.profileDetails[0].zipcode} />
+                            </div>
                         </div>
-                        <div className="form-group col-md-4">
-                            <select id="State" className="form-control" required defaultValue={this.props.profileDetails[0].state} >
-                                <option>CA</option>
-                                <option>AZ</option>
-                                <option>AS</option>
-                                <option>FG</option>
-                                <option>QW</option>
-                                <option>PO</option>
-                                <option>QW</option>
-                            </select>
+                        <div className="form-row">
+                            <div className="form-group col-md-12">
+                                <input type="email" className="form-control" id="Email" required readOnly
+                                    defaultValue={this.props.profileDetails[0].email_id} name="email_id" />
+                            </div>
+                            <div className="form-group col-md-12">
+                                <input type="text" className="form-control" id="mobileno" name="mobile_no"
+                                    placeholder="Mobile number" required defaultValue={this.props.profileDetails[0].mobile_no} />
+                            </div>
                         </div>
-                        <div className="form-group col-md-2">
-                            <input type="text" className="form-control" id="Zip" name="zipcode"
-                                required defaultValue={this.props.profileDetails[0].zipcode} />
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="form-group col-md-12">
-                            <input type="email" className="form-control" id="Email" required
-                                defaultValue={this.props.profileDetails[0].email_id} name="email_id" />
-                        </div>
-                        <div className="form-group col-md-12">
-                            <input type="text" className="form-control" id="mobileno" name="mobile_no"
-                                placeholder="Mobile number" required defaultValue={this.props.profileDetails[0].mobile_no} />
-                        </div>
-                    </div>
-                    <button type="submit" className="btn btn-secondary btn-lg btn-block">Update</button>
-                </form>
+                        <button type="submit" className="btn btn-secondary btn-lg btn-block">Update</button>
+                    </form>
+                </div>
             </div>
         )
     }
@@ -102,13 +115,15 @@ class Profile extends React.Component {
 const mapStateToProps = (state) => {
     return {
         profileDetails: state.ProfileReducer.profileDetails,
-        updateDetails: state.ProfileReducer.updateDetails
+        isLoading: state.ProfileReducer.isLoading,
+
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchProfile: (id) => { dispatch(fetchProfile(id,'/buyer')) },
-        updateProfile: (profileDetails) => { dispatch(updateProfile(profileDetails,'/buyer')) }
+        fetchProfile: () => { dispatch(fetchProfile('/buyer')) },
+        updateProfile: (profileDetails) => { dispatch(updateProfile(profileDetails, '/buyer')) },
+        updateImage : (image) => { dispatch(updateImage(image, '/buyer')) }
     }
 }
 

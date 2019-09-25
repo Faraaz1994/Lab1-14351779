@@ -1,11 +1,13 @@
+import { Redirect } from 'react-router-dom';
 import React from 'react';
-const axios = require('axios');
+import { connect } from 'react-redux';
+import { createProfile } from './actions/LoginActions';
 
-class SignUp extends React.Component {
+class SignUpResturant extends React.Component {
 
     handleSignIn = (event) =>{
         event.preventDefault();
-        const FullName = document.getElementById("FName").value + document.getElementById("LName").value;
+        const FullName = document.getElementById("FName").value + " " +document.getElementById("LName").value;
         const Address = document.getElementById("Address").value;
         const City = document.getElementById("City").value
         let State = document.getElementById("State");
@@ -14,7 +16,7 @@ class SignUp extends React.Component {
         const Zip = document.getElementById("Zip").value;
         const Password = document.getElementById("Password").value;
         const RName = document.getElementById("RName").value;
-        axios.post('/merchant/signup', {
+        this.props.createProfile({
             FullName : FullName,
             Address : Address,
             City : City,
@@ -23,16 +25,13 @@ class SignUp extends React.Component {
             Zip : Zip,
             Password : Password,
             RName : RName
-          })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+        });
     }
 
     render = () => {
+        if (this.props.isAccountCreated) {
+            return <Redirect to='/HomePageResturant' />
+        }
         return (
             <div className="App-header">
                 <form onSubmit={this.handleSignIn}>
@@ -64,12 +63,12 @@ class SignUp extends React.Component {
                             <select id="State" className="form-control" required>
                                 <option selected>Choose...</option>
                                 <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
+                                <option>AV</option>
+                                <option>AS</option>
+                                <option>FD</option>
+                                <option>RT</option>
+                                <option>PO</option>
+                                <option>GD</option>
                             </select>
                         </div>
                         <div className="form-group col-md-2">
@@ -95,4 +94,16 @@ class SignUp extends React.Component {
     }
 }
 
-export default SignUp
+const mapStateToProps = (state) => {
+    return {
+        isAccountCreated: state.ProfileReducer.isAccountCreated,
+
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        createProfile: (profileDetails) => { dispatch(createProfile(profileDetails, '/merchant')) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUpResturant)

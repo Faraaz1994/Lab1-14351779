@@ -1,26 +1,50 @@
-import { LOGIN,FETCHPROFILEBUYER,UPDATEPROFILEBUYER } from "./action-types/ActionTypes"
+import { LOGIN, FETCHPROFILEBUYER, UPDATEPROFILEBUYER, 
+        CREATEPROFILE, LOADING,FETCHRESTURANTIMAGE ,LOGERROR,
+        RESOLVEERROR} from "./action-types/ActionTypes"
+
+
 const axios = require('axios');
 
-export const authenticateLoginThunkHelper = (isAuthenticated) => {
+export const logError = (error) => {
+    return {
+        type: LOGERROR,
+        error
+    }
+}
+export const resolveError = (error) => {
+    return {
+        type: RESOLVEERROR,
+        error
+    }
+}
+export const authenticateLoginThunkHelper = (loginDetails) => {
     return {
         type: LOGIN,
-        isAuthenticated 
+        loginDetails
     }
 }
 
-export const authenticateLogin = (email, pwd,table) => {
+export const authenticateLogin = (email, pwd, table) => {
     return (dispatch, state) => {
         axios.post(table, {
             email: email,
             pwd: pwd
         })
             .then(function (response) {
-                console.log(response);
-                dispatch(authenticateLoginThunkHelper(response.data.error === false ? true : false));
+                if(response.data.error){
+                    dispatch(logError(response.data.msg))
+                }
+                else{
+                    dispatch(resolveError())
+                }
+                
+                dispatch(authenticateLoginThunkHelper({
+                    isAuthenticated: response.data.error === false ? true : false,
+                    full_name: response.data.details[0].full_name || response.data.details[0].merchant_name
+                }));
 
             })
             .catch(function (error) {
-                console.log(error);
                 dispatch(authenticateLoginThunkHelper(false));
             });
 
@@ -30,23 +54,19 @@ export const authenticateLogin = (email, pwd,table) => {
 export const fetchProfileThunkHelper = (profileDetails) => {
     return {
         type: FETCHPROFILEBUYER,
-        profileDetails 
+        profileDetails
     }
 }
 
-export const fetchProfile = (id,table) => {
+export const fetchProfile = (table) => {
     return (dispatch, state) => {
-        state.isLoading = true;
-        axios.get(table, {
-            id: id
-        })
+        dispatch(isLoading(true));
+        axios.get(table)
             .then(function (response) {
-                console.log(response);
                 dispatch(fetchProfileThunkHelper(response.data.details));
 
             })
             .catch(function (error) {
-                console.log(error);
                 dispatch(fetchProfileThunkHelper({}));
             });
 
@@ -56,24 +76,110 @@ export const fetchProfile = (id,table) => {
 export const updateProfileThunkHelper = (profileDetails) => {
     return {
         type: UPDATEPROFILEBUYER,
-        profileDetails 
+        profileDetails
     }
 }
 
-export const updateProfile = (profileDetails,table) => {
+export const updateProfile = (profileDetails, table) => {
     return (dispatch, state) => {
-        axios.post(table+'/update', {
+        dispatch(isLoading(true));
+        axios.post(table + '/update', {
             profileDetails: profileDetails
         })
             .then(function (response) {
-                console.log(response);
-                dispatch(updateProfileThunkHelper(!response.data.error));
-
+                if (response.data.error == false)
+                    dispatch(fetchProfile(table));
+                else
+                    dispatch(isLoading(false));
             })
             .catch(function (error) {
-                console.log(error);
-                dispatch(updateProfileThunkHelper(error));
+                dispatch(isLoading(false));
             });
 
     }
 }
+
+export const createProfileThunkHelper = (isAccountCreated) => {
+    return {
+        type: CREATEPROFILE,
+        isAccountCreated
+    }
+}
+
+export const createProfile = (profileDetails, table) => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.post(table + '/signup', {
+            profileDetails
+        })
+            .then(function (response) {
+                dispatch(createProfileThunkHelper(!response.data.error));
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
+
+
+export const updateImage = (image, table) => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.post(table + '/profilePic', image)
+            .then(function (response) {
+                dispatch(fetchProfile(table));
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
+//TODO fetch resturant images
+export const updateResturantImage = (images) => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.post('/merchant/resturantImages', images)
+            .then(function (response) {
+                dispatch(fetchResturantImages());
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
+
+
+export const fetchResturantImagesThunkHelper = (resturantImages) => {
+    return {
+        type: FETCHRESTURANTIMAGE,
+        resturantImages
+    }
+}
+export const fetchResturantImages = () => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.get('/merchant/resturantImages')
+            .then(function (response) {
+                    dispatch(fetchResturantImagesThunkHelper(response.data.details));
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
+
+
+
+
+export const isLoading = (isLoading) => {
+    return {
+        type: LOADING,
+        isLoading
+    }
+}
+
+
