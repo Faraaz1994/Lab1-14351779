@@ -71,3 +71,9 @@
   height: 200px;
   border-radius: 50%;
 }
+.hide{
+  visibility: hidden
+}
+.show{
+  visibility: visible
+}

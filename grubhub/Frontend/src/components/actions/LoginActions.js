@@ -1,6 +1,8 @@
-import { LOGIN, FETCHPROFILEBUYER, UPDATEPROFILEBUYER, 
-        CREATEPROFILE, LOADING,FETCHRESTURANTIMAGE ,LOGERROR,
-        RESOLVEERROR} from "./action-types/ActionTypes"
+import {
+    LOGIN, FETCHPROFILEBUYER, UPDATEPROFILEBUYER,
+    CREATEPROFILE, LOADING, FETCHRESTURANTIMAGE, LOGERROR,
+    RESOLVEERROR, FETCHORDERS, FETCHSECTION, FETCHITEMS
+} from "./action-types/ActionTypes"
 
 
 const axios = require('axios');
@@ -31,13 +33,13 @@ export const authenticateLogin = (email, pwd, table) => {
             pwd: pwd
         })
             .then(function (response) {
-                if(response.data.error){
+                if (response.data.error) {
                     dispatch(logError(response.data.msg))
                 }
-                else{
+                else {
                     dispatch(resolveError())
                 }
-                
+
                 dispatch(authenticateLoginThunkHelper({
                     isAuthenticated: response.data.error === false ? true : false,
                     full_name: response.data.details[0].full_name || response.data.details[0].merchant_name
@@ -113,6 +115,12 @@ export const createProfile = (profileDetails, table) => {
             profileDetails
         })
             .then(function (response) {
+                if (response.data.error) {
+                    dispatch(logError(response.data.msg))
+                }
+                else {
+                    dispatch(resolveError())
+                }
                 dispatch(createProfileThunkHelper(!response.data.error));
             })
             .catch(function (error) {
@@ -136,7 +144,6 @@ export const updateImage = (image, table) => {
 
     }
 }
-//TODO fetch resturant images
 export const updateResturantImage = (images) => {
     return (dispatch, state) => {
         dispatch(isLoading(true));
@@ -151,7 +158,6 @@ export const updateResturantImage = (images) => {
     }
 }
 
-
 export const fetchResturantImagesThunkHelper = (resturantImages) => {
     return {
         type: FETCHRESTURANTIMAGE,
@@ -163,7 +169,204 @@ export const fetchResturantImages = () => {
         dispatch(isLoading(true));
         axios.get('/merchant/resturantImages')
             .then(function (response) {
-                    dispatch(fetchResturantImagesThunkHelper(response.data.details));
+                dispatch(fetchResturantImagesThunkHelper(response.data.details));
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
+export const isLoading = (isLoading) => {
+    return {
+        type: LOADING,
+        isLoading
+    }
+}
+
+export const fetchOrdersThunkHelper = (orders) => {
+    return {
+        type: FETCHORDERS,
+        orders
+    }
+}
+export const fetchOrders = () => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.get('/order')
+            .then(function (response) {
+                dispatch(fetchOrdersThunkHelper(response.data.details));
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
+
+export const changeOrderStatus = (orderId, status) => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.post('/order/changeStatus', {
+            orderId,
+            status
+        })
+            .then(function (response) {
+                if (response.data.error) {
+                    dispatch(logError(response.data.msg))
+                }
+                else {
+                    dispatch(resolveError())
+                }
+                dispatch(fetchOrders());
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
+
+export const fetchSectionThunkHelper = (sections) => {
+    return {
+        type: FETCHSECTION,
+        sections
+    }
+}
+export const fetchSection = () => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.get('/merchant/section')
+            .then(function (response) {
+                if (response.data.error) {
+                    dispatch(logError(response.data.msg))
+                }
+                else {
+                    dispatch(resolveError())
+                }
+                dispatch(fetchItems(response.data.details[0].id));
+                dispatch(fetchSectionThunkHelper(response.data.details));
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
+
+export const fetchItemsThunkHelper = (items) => {
+    return {
+        type: FETCHITEMS,
+        items
+    }
+}
+
+export const fetchItems = (sectionId) => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.get('/merchant/items', {
+            params: {
+                section: sectionId
+            }
+        })
+            .then(function (response) {
+                if (response.data.error) {
+                    dispatch(logError(response.data.msg))
+                }
+                else {
+                    dispatch(resolveError())
+                }
+                dispatch(fetchItemsThunkHelper(response.data.details));
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
+
+export const addSection = (section) => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.post('/merchant/section', {
+            section: section
+        })
+            .then(function (response) {
+                if (response.data.error) {
+                    dispatch(logError(response.data.msg))
+                }
+                else {
+                    dispatch(resolveError())
+                }
+                dispatch(fetchSection());
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
+
+export const removeSection = (section) => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.post('/merchant/deleteSection', {
+            section: section
+        })
+            .then(function (response) {
+                if (response.data.error) {
+                    dispatch(logError(response.data.msg))
+                }
+                else {
+                    dispatch(resolveError())
+                }
+                dispatch(fetchSection());
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
+
+export const addItem = (item,section) => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.post('/merchant/addItem', {
+            item,
+            section
+        })
+            .then(function (response) {
+                if (response.data.error) {
+                    dispatch(logError(response.data.msg))
+                }
+                else {
+                    dispatch(resolveError())
+                }
+                dispatch(fetchItems(section));
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
+export const updateItem = (item,section,id) => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.post('/merchant/updateItem', {
+            item,
+            section,
+            id
+        })
+            .then(function (response) {
+                if (response.data.error) {
+                    dispatch(logError(response.data.msg))
+                }
+                else {
+                    dispatch(resolveError())
+                }
+                dispatch(fetchItems(section));
             })
             .catch(function (error) {
                 dispatch(isLoading(false));
@@ -174,12 +377,5 @@ export const fetchResturantImages = () => {
 
 
 
-
-export const isLoading = (isLoading) => {
-    return {
-        type: LOADING,
-        isLoading
-    }
-}
 
 

@@ -5,9 +5,9 @@ import { createProfile } from './actions/LoginActions';
 
 class SignUpResturant extends React.Component {
 
-    handleSignIn = (event) =>{
+    handleSignIn = (event) => {
         event.preventDefault();
-        const FullName = document.getElementById("FName").value + " " +document.getElementById("LName").value;
+        const FullName = document.getElementById("FName").value + " " + document.getElementById("LName").value;
         const Address = document.getElementById("Address").value;
         const City = document.getElementById("City").value
         let State = document.getElementById("State");
@@ -17,15 +17,22 @@ class SignUpResturant extends React.Component {
         const Password = document.getElementById("Password").value;
         const RName = document.getElementById("RName").value;
         this.props.createProfile({
-            FullName : FullName,
-            Address : Address,
-            City : City,
-            State : State,
-            Email : Email,
-            Zip : Zip,
-            Password : Password,
-            RName : RName
+            FullName: FullName,
+            Address: Address,
+            City: City,
+            State: State,
+            Email: Email,
+            Zip: Zip,
+            Password: Password,
+            RName: RName
         });
+    }
+    displayError = () => {
+        return (
+            <div class="alert alert-danger" role="alert">
+                {this.props.Error.errorText}
+            </div>
+        )
     }
 
     render = () => {
@@ -42,21 +49,21 @@ class SignUpResturant extends React.Component {
                         </div>
                         <div className="form-group col-md-6">
                             <label >Last Name</label>
-                            <input type="text" className="form-control" id="LName" placeholder="Last Name" required/>
+                            <input type="text" className="form-control" id="LName" placeholder="Last Name" required />
                         </div>
-                    </div>                   
-                     <div className="form-group">
+                    </div>
+                    <div className="form-group">
                         <label>Resturant name</label>
-                        <input type="text" className="form-control" id="RName" placeholder="Resturant Name" required/>
+                        <input type="text" className="form-control" id="RName" placeholder="Resturant Name" required />
                     </div>
                     <div className="form-group">
                         <label>Address</label>
-                        <input type="text" className="form-control" id="Address" placeholder="1234 Main St" required/>
+                        <input type="text" className="form-control" id="Address" placeholder="1234 Main St" required />
                     </div>
                     <div className="form-row">
                         <div className="form-group col-md-6">
                             <label >City</label>
-                            <input type="text" className="form-control" id="City" required/>
+                            <input type="text" className="form-control" id="City" required />
                         </div>
                         <div className="form-group col-md-4">
                             <label>State</label>
@@ -73,21 +80,22 @@ class SignUpResturant extends React.Component {
                         </div>
                         <div className="form-group col-md-2">
                             <label >Zip</label>
-                            <input type="text" className="form-control" id="Zip" required/>
+                            <input type="text" className="form-control" id="Zip" required />
                         </div>
                     </div>
                     <div className="form-row">
                         <div className="form-group col-md-12">
                             <label >Email</label>
-                            <input type="email" className="form-control" id="Email" placeholder="Email" required/>
+                            <input type="email" className="form-control" id="Email" placeholder="Email" required />
                         </div>
                         <div className="form-group col-md-12">
                             <label>Password</label>
-                            <input type="password" className="form-control" id="Password" placeholder="Password" required/>
+                            <input type="password" className="form-control" id="Password" placeholder="Password" required />
                         </div>
                     </div>
                     <button type="submit" className="btn btn-secondary btn-lg btn-block" >Sign in</button>
                 </form>
+                {this.props.Error.isError && this.displayError()}
             </div>
         )
 
@@ -97,6 +105,7 @@ class SignUpResturant extends React.Component {
 const mapStateToProps = (state) => {
     return {
         isAccountCreated: state.ProfileReducer.isAccountCreated,
+        Error: state.ErrorReducer,
 
     }
 }

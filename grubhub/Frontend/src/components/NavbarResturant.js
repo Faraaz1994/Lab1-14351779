@@ -7,7 +7,16 @@ class NavbarResturant extends React.Component {
         return (
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <Link to="/HomePageResturant" class="navbar-brand"  >Grubhub</Link>
-                <div class="collapse navbar-collapse" id="navbarText" />
+                <div class="collapse navbar-collapse" id="navbarText" >
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <Link to="/HomePageResturant" class="navbar-brand active"  >Orders</Link>
+                        </li>
+                        <li class="nav-item">
+                            <Link to="/Menu" class="navbar-brand"  >Menu</Link>
+                        </li>
+                    </ul>
+                </div>
                 <form class="form-inline my-2 my-lg-0">
                     <div className="col">
                         <div class="dropdown">

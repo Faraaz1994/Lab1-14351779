@@ -26,7 +26,13 @@ class SignUp extends React.Component {
             Password: Password
         });
     }
-
+    displayError =()=>{
+        return(
+            <div class="alert alert-danger" role="alert">
+                {this.props.Error.errorText}
+            </div>
+        )
+    }
     render = () => {
         if (this.props.isAccountCreated) {
             return <Redirect to='/HomePage' />
@@ -83,6 +89,7 @@ class SignUp extends React.Component {
                     </div>
                     <button type="submit" className="btn btn-secondary btn-lg btn-block">Sign in</button>
                 </form>
+                {this.props.Error.isError && this.displayError() }
             </div>
         )
 
@@ -92,6 +99,7 @@ class SignUp extends React.Component {
 const mapStateToProps = (state) => {
     return {
         isAccountCreated: state.ProfileReducer.isAccountCreated,
+        Error: state.ErrorReducer,
 
     }
 }

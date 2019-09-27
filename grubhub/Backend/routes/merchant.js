@@ -24,13 +24,13 @@ router.post('/update', function (req, response, next) {
         if (err) {
             response.json({ error: true, msg: "Operation failed", details: err });
             return;
-          }
+        }
         let query = "update merchant set merchant_name = ?,resturant_name = ?,cuisine= ?, email_id =?, mobile_no = ?, address_id = ? where id = ?";
         connection.query(query, [merchant_name, resturant_name, cuisine, email_id, mobile_no, address_id, id], function (err, res) {
             if (err) {
                 response.json({ error: true, msg: "Operation failed", details: err });
                 return;
-              }
+            }
             response.json({ error: false, msg: "account updated succesfully", details: res });
         });
     });
@@ -48,7 +48,7 @@ router.post("/profilePic", function (req, response) {
             if (err) {
                 response.json({ error: true, msg: "Operation failed", details: err });
                 return;
-              }
+            }
 
             response.json({ error: false, msg: "Image updated succesfully", details: res });
         });
@@ -64,11 +64,11 @@ router.post("/resturantImages", function (req, response) {
             if (err) return response.status(500).send(err);
 
             let query = "insert into image (merchant_id,image_name) values (?,?) ";
-            connection.query(query, [req.session.user.id,filePath], function (err, res) {
+            connection.query(query, [req.session.user.id, filePath], function (err, res) {
                 if (err) {
                     response.json({ error: true, msg: "Operation failed", details: err });
                     return;
-                  }
+                }
             });
         });
     });
@@ -97,7 +97,7 @@ router.post('/', function (req, response, next) {
         if (err) {
             response.json({ error: true, msg: "Operation failed", details: err });
             return;
-          }
+        }
 
         if (res.length < 1) {
             response.json({ error: true, msg: "Invalid Email ID", details: err });
@@ -119,7 +119,6 @@ router.post('/', function (req, response, next) {
 
 });
 
-//TODO : check email before sign up
 //Sign Up
 router.post('/signup', function (req, response, next) {
     const { FullName, Address, City, State, Email, Zip, Password, RName } = req.body.profileDetails;
@@ -129,7 +128,7 @@ router.post('/signup', function (req, response, next) {
         if (err) {
             response.json({ error: true, msg: "Operation failed", details: err });
             return;
-          }
+        }
 
         //Hash the password
         bcrypt.hash(Password, 10).then(function (hash) {
@@ -138,7 +137,7 @@ router.post('/signup', function (req, response, next) {
                 if (err) {
                     response.json({ error: true, msg: "Operation failed", details: err });
                     return;
-                  }
+                }
 
                 req.session.user = { id: res.insertId, email: Email };
                 response.cookie('cookie', "admin", { maxAge: 900000, httpOnly: false, path: '/' });
@@ -150,6 +149,85 @@ router.post('/signup', function (req, response, next) {
 
 });
 
+router.get('/section', function (req, response) {
+    let query = "select * from merchant_section where merchant_id = ?";
+    connection.query(query, [req.session.user.id], function (err, res) {
+        if (err) {
+            response.json({ error: true, msg: "Operation failed", details: err });
+            return
+        }
+        response.json({ error: false, msg: "Operation succesful", details: res });
+    });
+
+});
+
+router.post('/section', function (req, response, next) {
+    const { section } = req.body;
+    let query = "INSERT INTO merchant_section (merchant_id,section_text) VALUES (?,?)";
+    connection.query(query, [req.session.user.id, section], function (err, res) {
+        if (err) {
+            response.json({ error: true, msg: "Operation failed", details: err });
+            return
+        }
+        response.json({ error: false, msg: "Operation succesful", details: res });
+    });
+
+});
+
+router.post('/deleteSection', function (req, response, next) {
+    const { section } = req.body;
+    let query = "delete from merchant_section where id = ?";
+    connection.query(query, [section], function (err, res) {
+        if (err) {
+            response.json({ error: true, msg: "Operation failed", details: err });
+            return
+        }
+        response.json({ error: false, msg: "Operation succesful", details: res });
+    });
+
+});
+
+router.get('/items', function (req, response) {
+    const { section } = req.query;
+    let query = "select i.* from merchant_section as m inner join " +
+        "item as i on m.id = i.section where m.merchant_id = ? and m.id = ?";
+    connection.query(query, [req.session.user.id, section], function (err, res) {
+        if (err) {
+            response.json({ error: true, msg: "Operation failed", details: err });
+            return
+        }
+        response.json({ error: false, msg: "Operation succesful", details: res });
+    });
+
+});
+
+
+router.post('/addItem', function (req, response, next) {
+    const { item, section, } = req.body;
+    let query = "INSERT INTO item (name,description,section,price) VALUES (?,?,?,?)";
+    connection.query(query, [item.name, item.description, section, item.price], function (err, res) {
+        if (err) {
+            response.json({ error: true, msg: "Operation failed", details: err });
+            return
+        }
+        response.json({ error: false, msg: "Operation succesful", details: res });
+    });
+
+});
+
+router.post('/updateItem', function (req, response, next) {
+    const { item, id } = req.body;
+    let query = "UPDATE item SET name = ?, description = ?,price = ?" +
+        " where id = ?";
+    connection.query(query, [item.name, item.description, parseInt(item.price), id], function (err, res) {
+        if (err) {
+            response.json({ error: true, msg: "Operation failed", details: err });
+            return
+        }
+        response.json({ error: false, msg: "Operation succesful", details: res });
+    });
+
+});
 async function authenticate(pwd, hash) {
     const match = await bcrypt.compare(pwd, hash);
     console.log("Match", match);

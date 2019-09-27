@@ -1,10 +1,10 @@
-import { FETCHPROFILEBUYER, UPDATEPROFILEBUYER, CREATEPROFILE, LOADING ,FETCHRESTURANTIMAGE} from "../actions/action-types/ActionTypes";
-const axios = require('axios');
+import { FETCHPROFILEBUYER, UPDATEPROFILEBUYER, CREATEPROFILE, LOADING, FETCHRESTURANTIMAGE } from "../actions/action-types/ActionTypes";
+
 
 const initState = {
     profileDetails: null,
     isLoading: null,
-    resturantImages : null,
+    resturantImages: null,
     isAccountCreated: null,
 }
 
@@ -40,7 +40,7 @@ const ProfileReducer = (state = initState, action) => {
         return {
             ...state,
             isLoading: false,
-            resturantImages : action.resturantImages
+            resturantImages: action.resturantImages
         }
     }
     return state

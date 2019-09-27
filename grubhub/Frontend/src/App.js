@@ -12,6 +12,7 @@ import Profile from './components/Profile';
 import ProfileResturant from './components/ProfileResturant';
 import HomePageResturant from './components/HomePageResturant';
 import SignOut from './components/SignOut';
+import Menu from './components/Menu';
 
 import './App.css';
 
@@ -27,8 +28,8 @@ class App extends React.Component {
           <Route exact path="/HomePageResturant" component={HomePageResturant} />
           <Route exact path="/SignOut" component={SignOut} />
           <Route exact path="/Profile" component={Profile} />
+          <Route exact path="/Menu" component={Menu} />
           <Route exact path="/ProfileResturant" component={ProfileResturant} />
-
           <Route exact path="/HomePage" component={HomePage} />
           <Route exact path="/SearchPage" component={SearchPage} />
           <Route exact path="/DetailsPage" component={DetailsPage} />
