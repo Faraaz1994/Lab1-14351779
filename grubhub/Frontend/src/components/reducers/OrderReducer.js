@@ -1,4 +1,5 @@
-import { FETCHORDERS } from "../actions/action-types/ActionTypes";
+import { FETCHORDERS,FETCHBUYERORDERS } from "../actions/action-types/ActionTypes";
+
 
 
 const initState ={
@@ -7,6 +8,12 @@ const initState ={
 
 const OrderReducer = (state = initState,action) =>{
      if(action.type === FETCHORDERS){
+        return {
+            ...state,
+            orders : action.orders
+        }
+    }
+    else if(action.type == FETCHBUYERORDERS){
         return {
             ...state,
             orders : action.orders

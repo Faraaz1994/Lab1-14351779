@@ -18,10 +18,13 @@ router.get('/', function (req, response, next) {
 
 //get list of items offered by a resturant based on resturant id
 router.get('/id', function (req, response, next) {
+    debugger
     const { resturantId } = req.query;
-    let query = "SELECT  i.id,i.name,i.description,i.section,ms.section_text,i.price FROM item AS i INNER JOIN " +
-                "merchant_section as ms on i.section = ms.id inner join merchant " +
-                "as m on ms.merchant_id = m.id where m.id = ? order by i.section";
+    let query = "SELECT  i.id,i.name,i.description,i.section,ms.section_text,i.price,im.id as image_id,im.image_name FROM item AS i INNER JOIN " +
+        "merchant_section as ms on i.section = ms.id inner join merchant " +
+        "as m on ms.merchant_id = m.id left outer join image as im on im.item_id = i.id" +
+        " where m.id = ? order by i.section ";
+
     connection.query(query, [resturantId], function (err, res) {
         if (err) response.json({ error: true, msg: "Operation failed", details: err });
         console.log(res);
@@ -29,5 +32,21 @@ router.get('/id', function (req, response, next) {
     })
 
 });
+
+router.get('/resturantimage', function (req, response, next) {
+    const { resturantId } = req.query;
+    let query = "select * from image where merchant_id = ? limit 1";
+    connection.query(query, [resturantId], function (err, res) {
+        if (err) {
+            response.json({ error: true, msg: "Operation failed", details: err });
+            return
+        }
+        console.log(res);
+        response.json({ error: false, msg: "Resturants image retrived based on id", data: res });
+    })
+
+});
+
+
 
 module.exports = router;

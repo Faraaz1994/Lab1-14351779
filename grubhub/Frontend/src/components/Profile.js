@@ -1,6 +1,4 @@
-import { Redirect } from 'react-router-dom';
 import React from 'react';
-import img6 from './images/img6.jpg'
 import { connect } from 'react-redux';
 import { fetchProfile, updateProfile,updateImage } from './actions/LoginActions'
 import BusyIndicator from './BusyIndicator'

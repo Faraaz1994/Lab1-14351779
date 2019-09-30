@@ -10,7 +10,9 @@ var connection = require('./connection')
 // '5','Cancelled'
 const orderStatusNew = 1;
 
+//get orders for a particular resturant
 router.get('/', function (req, response) {
+    const {flag} = req.query;
     let query = "select o.*,oi.qty,i.name,i.section,i.price,os.status_text,b.full_name," +
         "concat_ws(' ',a.street,a.city,a.state) as address " +
         "from `order` as o inner join order_item as oi " +
@@ -18,8 +20,8 @@ router.get('/', function (req, response) {
         "on oi.item = i.id inner join order_status as os " +
         "on o.status = os.id inner join buyer as b " +
         "on o.buyer_id = b.id inner join address as a " +
-        "on b.address_id = a.id where o.merchant_id = ? order by o.id"
-    connection.query(query, [req.session.user.id], function (err, res) {
+        "on b.address_id = a.id where o.merchant_id = ? and o.status in (?) order by o.id"
+    connection.query(query, [req.session.user.id,flag], function (err, res) {
         if (err) {
             response.json({ error: true, msg: "Operation failed", details: err });
             return;
@@ -28,6 +30,28 @@ router.get('/', function (req, response) {
 
     });
 });
+
+//get orders of a particular buyer
+router.get('/buyerOrder', function (req, response) {
+    const {flag} = req.query;
+    let query = "select o.*,oi.qty,i.name,i.section,i.price,os.status_text,m.resturant_name," +
+        "concat_ws(' ',a.street,a.city,a.state) as address " +
+        "from `order` as o inner join order_item as oi " +
+        "on o.id = oi.order_id inner join item as i " +
+        "on oi.item = i.id inner join order_status as os " +
+        "on o.status = os.id inner join merchant as m " +
+        "on o.merchant_id = m.id inner join address as a " +
+        "on m.address_id = a.id where o.buyer_id = ? and o.status in (?) order by o.id"
+    connection.query(query, [req.session.user.id,flag], function (err, res) {
+        if (err) {
+            response.json({ error: true, msg: "Operation failed", details: err });
+            return;
+        }
+        response.json({ error: false, msg: "Operation Succeded", details: res });
+
+    });
+});
+
 
 router.post('/', function (req, response, next) {
     const user_id = req.session.user.id;

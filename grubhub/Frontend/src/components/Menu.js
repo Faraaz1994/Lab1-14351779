@@ -1,6 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchSection, addSection, removeSection, fetchItems, addItem, updateItem } from './actions/LoginActions'
+import {
+    fetchSection, addSection, removeSection, fetchItems, addItem, updateItem,
+    updateItemImage, deleteItem
+} from './actions/LoginActions'
 import NavbarResturant from './NavbarResturant'
 class Menu extends React.Component {
 
@@ -9,6 +12,10 @@ class Menu extends React.Component {
         this.props.fetchSection();
     }
     handleSection = (event) => {
+        debugger;
+        if (window.$('.nav-tabs .active').length == 0) {
+            window.$('.nav-tabs')[0].firstElementChild.classList.toggle("active");
+        }
         //remove active
         window.$('.nav-tabs .active')[0].classList.toggle("active");
         //add active
@@ -63,17 +70,41 @@ class Menu extends React.Component {
             </div>
         )
     }
+    openImageUploader = (event) => {
+        let item = event.target.parentNode.dataset.itemid
+        this.refs[item].click();
+    }
+    handleImageUpload = (event) => {
+        let file = event.target.files[0];
+        const formData = new FormData()
+        formData.append(
+            'itemImage',
+            file,
+            file.name,
+        );
+        formData.append(
+            'itemid',
+            event.target.parentNode.dataset.itemid
+        )
+        this.props.updateItemImage(formData, window.$('.nav-tabs .active')[0].firstElementChild.value);
+    }
+    handleItemdelete = (event) => {
+        let itemid = event.target.parentNode.parentNode.dataset.itemid;
+        this.props.deleteItem(itemid, window.$('.nav-tabs .active')[0].firstElementChild.value)
+    }
     renderItems = () => {
         let cards = [];
         let activeSection = window.$('.nav-tabs .active')[0];
         if (this.props.items && activeSection) {
             let items = this.props.items;
             items.forEach(item => {
-                cards.push(<div class="card" >
-                    <button type="button" class="close" aria-label="Close">
+                cards.push(<div class="card" data-itemid={item.id}>
+                    <button type="button" class="close" aria-label="Close" onClick={this.handleItemdelete}>
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <img class="card-img-top" src="/images/defaultuser.png" alt=""/>
+                    <input type="image" src={item.image_name} alt="Avatar" class="card-img-top"
+                        onClick={this.openImageUploader} style={{ width: "150px", height: "150px", margin: "auto" }} />
+                    <input type="file" ref={item.id} style={{ display: "none" }} onChange={this.handleImageUpload} />
                     <div class="card-body">
                         <p class="card-title editCard" data-name="name">{item.name}</p>
                         <p class="card-text editCard" data-name="description">{item.description}</p>
@@ -131,7 +162,6 @@ class Menu extends React.Component {
 
     }
     handleItemAdd = (event) => {
-        debugger
         let action = event.target.textContent;
         let elements = document.getElementsByClassName("hide");
         let item = {};
@@ -190,7 +220,8 @@ const mapDispatchToProps = (dispatch) => {
         updateItem: (item, section, id) => { dispatch(updateItem(item, section, id)) },
         fetchItems: (section) => { dispatch(fetchItems(section)) },
         removeSection: (section) => { dispatch(removeSection(section)) },
-
+        updateItemImage: (image, section) => { dispatch(updateItemImage(image, section)) },
+        deleteItem: (item, section) => { dispatch(deleteItem(item, section)) }
     }
 }
 

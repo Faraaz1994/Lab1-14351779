@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from './Navbar';
-import img1 from './images/img1.jpg'
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 const axios = require('axios');
 
 
@@ -10,13 +11,15 @@ class DetailPage extends React.Component {
         activeSection: null,
         latestItemId: null,
         latestItemName: null,
-        shoppingCart: []
+        shoppingCart: [],
+        resturantimage: null
     }
 
     constructor(props) {
         super(props);
         const { resturantId } = this.props.location.state;
         this.fetchResturantDetails(resturantId);
+        this.getImage(resturantId);
     }
 
     componentDidMount() {
@@ -35,7 +38,6 @@ class DetailPage extends React.Component {
             let itemId = this.state.latestItemId;
             let bPush = true;
             let totalPrice = 0;
-            debugger
             //check  of item is already present in the cart
             for (let i = 0; i < items.length - 1; i++) {
                 if (items[i].itemId === itemId) {
@@ -82,6 +84,19 @@ class DetailPage extends React.Component {
         })
     }
 
+    showAlert = (msg) => {
+        confirmAlert({
+            title: 'Order details',
+            message: msg,
+            buttons: [
+                {
+                    label: 'Ok',
+
+                }
+            ]
+        });
+    }
+
     async fetchResturantDetails(resturantId) {
         try {
             const response = await axios.get('/resturant/id', {
@@ -111,11 +126,27 @@ class DetailPage extends React.Component {
         })
     }
 
+    async getImage(resturantId) {
+        try {
+            const response = await axios.get('/resturant/resturantimage', {
+                params: {
+                    resturantId: resturantId
+                }
+            });
+            this.setState({
+                resturantimage: response.data.data[0].image_name
+            })
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     renderResturantDetails = () => {
-        const { resturant_name, cuisine } = this.props.location.state;
+        const { resturant_name, cuisine, resturantId } = this.props.location.state;
         return (
             <div class="card">
-                <img class="card-img-top" src={img1} alt="" style={{ height: "16rem" }} />
+                <img class="card-img-top" src={this.state.resturantimage} alt="" style={{ height: "16rem" }} />
                 <div class="card-body">
                     <h5 class="card-title">{resturant_name}</h5>
                     <p class="card-text">{cuisine}</p>
@@ -140,11 +171,6 @@ class DetailPage extends React.Component {
             return listItem
         }
         return null
-    }
-
-    //TODO
-    getImage = (itemId) => {
-
     }
     openModal = () => {
         return (
@@ -196,7 +222,7 @@ class DetailPage extends React.Component {
             let items = sectionDetails[activeSection];
             items.forEach(item => {
                 cards.push(<div class="card">
-                    <img class="card-img-top" alt="Card image cap" />
+                    <img class="card-img-top" src={item.image_name} style={{ width: "110px", height: "110px", margin: "auto" }} alt="Card image cap" />
                     <div class="card-body">
                         <h5 class="card-title">{item.name}</h5>
                         <p class="card-text">{item.description}</p>
@@ -260,10 +286,10 @@ class DetailPage extends React.Component {
                     that.setState({
                         shoppingCart: []
                     });
-                    console.log("order place sucesfullly")
+                    that.showAlert("Order placed succesfully");
                 }
                 else {
-                    console.log("failed");
+                    that.showAlert("Order wasnt placed. Please try again in sometime ");
                 }
             })
             .catch(function (error) {

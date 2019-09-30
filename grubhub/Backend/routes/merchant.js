@@ -189,8 +189,9 @@ router.post('/deleteSection', function (req, response, next) {
 
 router.get('/items', function (req, response) {
     const { section } = req.query;
-    let query = "select i.* from merchant_section as m inner join " +
-        "item as i on m.id = i.section where m.merchant_id = ? and m.id = ?";
+    let query = "select i.*,im.image_name from merchant_section as m inner join " +
+        "item as i on m.id = i.section left outer join image as im on i.id = im.item_id "+
+        "where m.merchant_id = ? and m.id = ?";
     connection.query(query, [req.session.user.id, section], function (err, res) {
         if (err) {
             response.json({ error: true, msg: "Operation failed", details: err });
@@ -228,6 +229,41 @@ router.post('/updateItem', function (req, response, next) {
     });
 
 });
+
+router.post("/itemImage", function (req, response) {
+    let sampleFile = req.files.itemImage;
+    let {itemid} = req.body;
+    let filePath = '/images/item/' + sampleFile.name;
+    sampleFile.mv(__dirname + "/../public" + filePath, function (err) {
+        if (err) return response.status(500).send(err);
+
+        let query = "UPDATE image SET image_name = ?, merchant_id = ? WHERE item_id = ?"
+        connection.query(query, [filePath,req.session.user.id, itemid], function (err, res) {
+            if (err) {
+                response.json({ error: true, msg: "Operation failed", details: err });
+                return;
+            }
+
+            response.json({ error: false, msg: "Image updated succesfully", details: res });
+        });
+    });
+});
+
+
+router.post('/deleteitem',function(req,res){
+    debugger
+    let {item} = req.body;
+    let query = "delete from item where id = ?";
+    connection.query(query, [item], function (err, res) {
+        if (err) {
+            response.json({ error: true, msg: "Operation failed", details: err });
+            return;
+        }
+
+        response.json({ error: false, msg: "item deleted succesfully", details: res });
+    });
+});
+
 async function authenticate(pwd, hash) {
     const match = await bcrypt.compare(pwd, hash);
     console.log("Match", match);

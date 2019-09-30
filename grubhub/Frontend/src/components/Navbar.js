@@ -17,8 +17,8 @@ class Navbar extends React.Component {
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <Link to="/Profile" class="dropdown-item"  >Profile</Link>
-                                <Link to="/HomePage" class="dropdown-item"  >Upcoming orders</Link>
-                                <Link to="/HomePage" class="dropdown-item"  >Past orders</Link>
+                                <Link to={{ pathname: `BuyerOrders`,state: { flag: 0, desc : 'Upcoming Orders'}, search : "0"}} class="dropdown-item"  >Upcoming orders</Link>
+                                <Link to={{ pathname: `BuyerOrders`,state: { flag: 1, desc : 'Past Orders'},search : "1" }} class="dropdown-item"  >Past orders</Link>
                                 <Link to="/SignOut" class="dropdown-item"  >Sign out</Link>
                             </div>
                         </div>

@@ -25,6 +25,7 @@ class NavbarResturant extends React.Component {
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <Link to="/ProfileResturant" class="dropdown-item"  >Profile</Link>
+                                <Link to="/ResturantOrders" class="dropdown-item"  >Past Orders</Link>
                                 <Link to="/SignOut" class="dropdown-item"  >Sign out</Link>
                             </div>
                         </div>

@@ -13,6 +13,8 @@ import ProfileResturant from './components/ProfileResturant';
 import HomePageResturant from './components/HomePageResturant';
 import SignOut from './components/SignOut';
 import Menu from './components/Menu';
+import BuyerOrders from './components/BuyerOrders';
+import ResturantOrders from './components/ResturantOrders';
 
 import './App.css';
 
@@ -33,6 +35,8 @@ class App extends React.Component {
           <Route exact path="/HomePage" component={HomePage} />
           <Route exact path="/SearchPage" component={SearchPage} />
           <Route exact path="/DetailsPage" component={DetailsPage} />
+          <Route exact path="/BuyerOrders" component={BuyerOrders} />
+          <Route exact path="/ResturantOrders" component={ResturantOrders} />
         </div>
       </BrowserRouter>
     );

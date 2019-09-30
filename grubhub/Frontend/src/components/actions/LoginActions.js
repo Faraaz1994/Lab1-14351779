@@ -1,7 +1,7 @@
 import {
     LOGIN, FETCHPROFILEBUYER, UPDATEPROFILEBUYER,
     CREATEPROFILE, LOADING, FETCHRESTURANTIMAGE, LOGERROR,
-    RESOLVEERROR, FETCHORDERS, FETCHSECTION, FETCHITEMS
+    RESOLVEERROR, FETCHORDERS, FETCHSECTION, FETCHITEMS, FETCHBUYERORDERS
 } from "./action-types/ActionTypes"
 
 
@@ -190,10 +190,14 @@ export const fetchOrdersThunkHelper = (orders) => {
         orders
     }
 }
-export const fetchOrders = () => {
+export const fetchOrders = (flag) => {
     return (dispatch, state) => {
         dispatch(isLoading(true));
-        axios.get('/order')
+        axios.get('/order',{
+            params : {
+                flag
+            }
+        })
             .then(function (response) {
                 dispatch(fetchOrdersThunkHelper(response.data.details));
             })
@@ -329,7 +333,7 @@ export const removeSection = (section) => {
     }
 }
 
-export const addItem = (item,section) => {
+export const addItem = (item, section) => {
     return (dispatch, state) => {
         dispatch(isLoading(true));
         axios.post('/merchant/addItem', {
@@ -351,7 +355,7 @@ export const addItem = (item,section) => {
 
     }
 }
-export const updateItem = (item,section,id) => {
+export const updateItem = (item, section, id) => {
     return (dispatch, state) => {
         dispatch(isLoading(true));
         axios.post('/merchant/updateItem', {
@@ -374,8 +378,64 @@ export const updateItem = (item,section,id) => {
 
     }
 }
+export const updateItemImage = (image, section) => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.post('merchant/itemImage', image)
+            .then(function (response) {
+                dispatch(fetchItems(section));
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
+
+export const deleteItem = (item, section) => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.post('/merchant/deleteitem', { item: item })
+            .then(function (response) {
+                dispatch(fetchItems(section));
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
 
 
+export const fetchBuyerOrdersThunkHelper = (orders) => {
+    return {
+        type: FETCHBUYERORDERS,
+        orders
+    }
+}
 
+export const fetchBuyerOrders = (flag) => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.get('/order/buyerOrder', {
+            params: {
+                flag: flag
+            }
+        })
+            .then(function (response) {
+                if (response.data.error) {
+                    dispatch(logError(response.data.msg))
+                }
+                else {
+                    dispatch(resolveError())
+                }
+                dispatch(fetchBuyerOrdersThunkHelper(response.data.details));
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
 
 

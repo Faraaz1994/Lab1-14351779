@@ -7,7 +7,7 @@ import { fetchOrders,changeOrderStatus } from './actions/LoginActions'
 class HomePageResturant extends React.Component {
 
     componentWillMount = () => {
-        this.props.fetchOrders();
+        this.props.fetchOrders([1,2,3]);
     }
 
     renderOrders = () => {
@@ -160,7 +160,7 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchOrders: () => { dispatch(fetchOrders()) },
+        fetchOrders: (flag) => { dispatch(fetchOrders(flag)) },
         changeOrderStatus : (orderid,status) =>{ dispatch(changeOrderStatus(orderid,status))}
     }
 }
