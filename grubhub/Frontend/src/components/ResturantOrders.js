@@ -12,6 +12,15 @@ class BuyerOrders extends React.Component {
     }
 
     renderOrders = () => {
+        if (this.props.orders.length == 0) {
+            return (
+                <tr style={{ textAlign: 'center', verticalAlign: 'middle', fontSize: "4rem",fontFamily:"fantasy"}}>
+                    <td >
+                        You dont have any recent orders 
+                </td>
+                </tr>
+            )
+        }
         let items = [];
         let count = 0;
         let i = 0;

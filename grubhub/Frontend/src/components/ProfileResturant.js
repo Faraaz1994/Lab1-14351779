@@ -72,7 +72,6 @@ class ProfileResturant extends React.Component {
     renderCarouselImages = () => {
         if (this.props.resturantImages) {
             if (this.props.resturantImages.length === 0) {
-                console.log("heeeeeeee")
                 return (
                     <div className="carousel-item active">
                         <img class="d-block w-100" src="/images/defaultresturant.jpg" name="resturantImage" onClick={this.openImageUploader} alt="First slide" style={{ height: "20rem" }} />
@@ -96,11 +95,6 @@ class ProfileResturant extends React.Component {
     renderCarousel = () => {
         return (
             <div id="resturantCarousel" class="carousel slide" data-ride="carousel">
-                <ol class="carousel-indicators">
-                    <li data-target="#resturantCarousel" data-slide-to="0" class="active"></li>
-                    <li data-target="#resturantCarousel" data-slide-to="1"></li>
-                    <li data-target="#resturantCarousel" data-slide-to="2"></li>
-                </ol>
                 <div class="carousel-inner">
                     {this.renderCarouselImages()}
                 </div>

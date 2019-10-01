@@ -5,6 +5,8 @@ import {
     updateItemImage, deleteItem
 } from './actions/LoginActions'
 import NavbarResturant from './NavbarResturant'
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 class Menu extends React.Component {
 
 
@@ -123,7 +125,8 @@ class Menu extends React.Component {
                 <div class="card-body">
                     <p><input class="card-title" placeholder="Enter name" name="name" className="hide"></input></p>
                     <p><input class="card-text" placeholder="Enter description" name="description" className="hide"></input></p>
-                    <p><input placeholder="Enter price" className="hide" name="price"></input></p>
+                    <p><input placeholder="Enter price" className="hide" name="price" type="number" max="100" min="1"
+                        style={{ width: "10.6rem" }}></input></p>
                     <button type="button" class="btn btn-primary" onClick={this.handleItemAdd} >
                         Add item
                     </button>
@@ -166,14 +169,31 @@ class Menu extends React.Component {
         let elements = document.getElementsByClassName("hide");
         let item = {};
         for (let i = 0; i < elements.length; i++) {
-            elements[i].classList.toggle("show");
             item[elements[i].name] = elements[i].value
+            if (item[elements[i].name] == "" && action == "save") {
+                this.showAlert("Enter all the requred fields", "Error");
+                return;
+            }
+            elements[i].classList.toggle("show");
         }
         if (action === "save") {
             this.props.addItem(item, window.$('.nav-tabs .active')[0].firstElementChild.value);
         }
+
         action == "save" ? event.target.textContent = "Add item" : event.target.textContent = "save";
 
+    }
+    showAlert = (msg, title) => {
+        confirmAlert({
+            title: title,
+            message: msg,
+            buttons: [
+                {
+                    label: 'Ok',
+
+                }
+            ]
+        });
     }
     handleRemoveSection = () => {
         console.log("remove")

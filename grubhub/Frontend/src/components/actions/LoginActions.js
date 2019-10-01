@@ -1,7 +1,7 @@
 import {
-    LOGIN, FETCHPROFILEBUYER, UPDATEPROFILEBUYER,
+    LOGIN, FETCHPROFILEBUYER, UPDATEPROFILEBUYER, FETCHCUISINE,
     CREATEPROFILE, LOADING, FETCHRESTURANTIMAGE, LOGERROR,
-    RESOLVEERROR, FETCHORDERS, FETCHSECTION, FETCHITEMS, FETCHBUYERORDERS
+    RESOLVEERROR, FETCHORDERS, FETCHSECTION, FETCHITEMS, FETCHBUYERORDERS, FETCHRESTURANT
 } from "./action-types/ActionTypes"
 
 
@@ -193,9 +193,9 @@ export const fetchOrdersThunkHelper = (orders) => {
 export const fetchOrders = (flag) => {
     return (dispatch, state) => {
         dispatch(isLoading(true));
-        axios.get('/order',{
-            params : {
-                flag
+        axios.get('/order', {
+            params: {
+                flag: flag
             }
         })
             .then(function (response) {
@@ -438,4 +438,64 @@ export const fetchBuyerOrders = (flag) => {
     }
 }
 
+export const fetchResturantThunkHelper = (resturants) => {
+    return {
+        type: FETCHRESTURANT,
+        resturants
+    }
+}
+
+export const fetchResturant = (dish, zip) => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.get('/resturant', {
+            params: {
+                dish: dish,
+                zip: zip
+            }
+        })
+            .then(function (response) {
+                if (response.data.error) {
+                    dispatch(logError(response.data.msg))
+                }
+                else {
+                    dispatch(resolveError())
+                }
+                dispatch(fetchResturantThunkHelper(response.data.data));
+
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
+
+export const fetchCuisineThunkHelper = (cuisine) => {
+    return {
+        type: FETCHCUISINE,
+        cuisine
+    }
+}
+
+export const fetchCuisine = () => {
+    return (dispatch, state) => {
+        dispatch(isLoading(true));
+        axios.get('/resturant/cuisine')
+            .then(function (response) {
+                if (response.data.error) {
+                    dispatch(logError(response.data.msg))
+                }
+                else {
+                    dispatch(resolveError())
+                }
+                dispatch(fetchCuisineThunkHelper(response.data.data));
+
+            })
+            .catch(function (error) {
+                dispatch(isLoading(false));
+            });
+
+    }
+}
 

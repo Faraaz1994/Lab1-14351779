@@ -58,6 +58,7 @@ router.post("/profilePic", function (req, response) {
 //Update resturant images
 router.post("/resturantImages", function (req, response) {
     let sampleFiles = req.files.profileImage;
+    if (sampleFiles.constructor != Array) sampleFiles = [sampleFiles];
     sampleFiles.forEach(sampleFile => {
         let filePath = '/images/resturant/' + sampleFile.name;
         sampleFile.mv(__dirname + "/../public" + filePath, function (err) {
@@ -190,7 +191,7 @@ router.post('/deleteSection', function (req, response, next) {
 router.get('/items', function (req, response) {
     const { section } = req.query;
     let query = "select i.*,im.image_name from merchant_section as m inner join " +
-        "item as i on m.id = i.section left outer join image as im on i.id = im.item_id "+
+        "item as i on m.id = i.section left outer join image as im on i.id = im.item_id " +
         "where m.merchant_id = ? and m.id = ?";
     connection.query(query, [req.session.user.id, section], function (err, res) {
         if (err) {
@@ -232,13 +233,13 @@ router.post('/updateItem', function (req, response, next) {
 
 router.post("/itemImage", function (req, response) {
     let sampleFile = req.files.itemImage;
-    let {itemid} = req.body;
+    let { itemid } = req.body;
     let filePath = '/images/item/' + sampleFile.name;
     sampleFile.mv(__dirname + "/../public" + filePath, function (err) {
         if (err) return response.status(500).send(err);
 
         let query = "UPDATE image SET image_name = ?, merchant_id = ? WHERE item_id = ?"
-        connection.query(query, [filePath,req.session.user.id, itemid], function (err, res) {
+        connection.query(query, [filePath, req.session.user.id, itemid], function (err, res) {
             if (err) {
                 response.json({ error: true, msg: "Operation failed", details: err });
                 return;
@@ -250,9 +251,8 @@ router.post("/itemImage", function (req, response) {
 });
 
 
-router.post('/deleteitem',function(req,res){
-    debugger
-    let {item} = req.body;
+router.post('/deleteitem', function (req, response) {
+    let { item } = req.body;
     let query = "delete from item where id = ?";
     connection.query(query, [item], function (err, res) {
         if (err) {
