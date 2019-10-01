@@ -17,6 +17,15 @@ class App extends React.Component {
     this.handleOperator = this.handleOperator.bind(this);
   }
 
+  resetState = () => {
+    this.setState({
+      display: "",
+      leftOperand: null,
+      rightOperand: null,
+      operator: null,
+      isItRightOperand: false
+    })
+  }
   setDisplay = (char) => {
     if (typeof char === "object") {
       char = char.nativeEvent.data;
@@ -37,15 +46,22 @@ class App extends React.Component {
     }
   }
 
-  async getResults(leftOperand, rightOperand, operator,currentOperator) {
+  async getResults(leftOperand, rightOperand, operator, currentOperator) {
     const rawResponse = await fetch('/', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ leftOperand : leftOperand, rightOperand: rightOperand,operator : operator })
+      body: JSON.stringify({ leftOperand: leftOperand, rightOperand: rightOperand, operator: operator })
     });
+    debugger
+    if (rawResponse.status === 500) {
+      this.setState({
+        display: "Server offline. Please try after some time."
+      });
+      setTimeout(this.resetState,2000);
+    }
     const content = await rawResponse.json();
     this.setState({
       leftOperand: content.result,
@@ -60,7 +76,7 @@ class App extends React.Component {
     const { leftOperand, display, operator, isItRightOperand } = this.state;
     const inputValue = parseFloat(display);
     if (operator && isItRightOperand) {
-      this.getResults(leftOperand, inputValue, operator,currentOperator);
+      this.getResults(leftOperand, inputValue, operator, currentOperator);
       return;
     }
     if (leftOperand === null) {
@@ -71,7 +87,7 @@ class App extends React.Component {
         operator: currentOperator
       })
     }
-    else if(isItRightOperand && !operator){
+    else if (isItRightOperand && !operator) {
       this.setState({
         leftOperand: inputValue,
         isItRightOperand: true,
@@ -79,7 +95,7 @@ class App extends React.Component {
         operator: currentOperator
       })
     }
-    else if (operator){
+    else if (operator) {
       this.setState({
         leftOperand: inputValue,
         isItRightOperand: true,
@@ -99,9 +115,7 @@ class App extends React.Component {
               <div class="input-group mb-3">
                 <input id="displayBar" type="text" className="inpFormat" value={this.state.display} onChange={this.setDisplay} />
                 <div class="input-group-append">
-                  <button class="btn btn-outline-secondary" type="button" style={{ width: '5.3rem' }} onClick={() => {
-                    return this.setState({ display: '' });
-                  }} >C</button>
+                  <button class="btn btn-outline-secondary" type="button" style={{ width: '5.3rem' }} onClick={this.resetState} >C</button>
                 </div>
               </div>
             </div>
