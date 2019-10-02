@@ -151,13 +151,13 @@ class ProfileResturant extends React.Component {
                             </div>
                             <div className="form-group col-md-4">
                                 <select id="State" className="form-control" required defaultValue={this.props.profileDetails[0].state} >
-                                    <option>CA</option>
+                                    <option>AL</option>
+                                    <option>AK</option>
                                     <option>AZ</option>
-                                    <option>AS</option>
-                                    <option>FG</option>
-                                    <option>QW</option>
-                                    <option>PO</option>
-                                    <option>QW</option>
+                                    <option>CA</option>
+                                    <option>FL</option>
+                                    <option>KS</option>
+                                    <option>NJ</option>
                                 </select>
                             </div>
                             <div className="form-group col-md-3">

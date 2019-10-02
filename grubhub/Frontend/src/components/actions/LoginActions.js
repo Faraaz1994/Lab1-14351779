@@ -42,9 +42,8 @@ export const authenticateLogin = (email, pwd, table) => {
 
                 dispatch(authenticateLoginThunkHelper({
                     isAuthenticated: response.data.error === false ? true : false,
-                    full_name: response.data.details[0].full_name || response.data.details[0].merchant_name
                 }));
-
+                dispatch(fetchProfile(table));
             })
             .catch(function (error) {
                 dispatch(authenticateLoginThunkHelper(false));
@@ -122,6 +121,8 @@ export const createProfile = (profileDetails, table) => {
                     dispatch(resolveError())
                 }
                 dispatch(createProfileThunkHelper(!response.data.error));
+                dispatch(fetchProfile(table));
+
             })
             .catch(function (error) {
                 dispatch(isLoading(false));

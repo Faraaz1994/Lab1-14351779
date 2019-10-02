@@ -69,13 +69,13 @@ class SignUpResturant extends React.Component {
                             <label>State</label>
                             <select id="State" className="form-control" required>
                                 <option selected>Choose...</option>
+                                <option>AL</option>
+                                <option>AK</option>
+                                <option>AZ</option>
                                 <option>CA</option>
-                                <option>AV</option>
-                                <option>AS</option>
-                                <option>FD</option>
-                                <option>RT</option>
-                                <option>PO</option>
-                                <option>GD</option>
+                                <option>FL</option>
+                                <option>KS</option>
+                                <option>NJ</option>
                             </select>
                         </div>
                         <div className="form-group col-md-2">

@@ -50,7 +50,6 @@ class Login extends React.Component {
 const mapStateToProps = (state) => {
     return {
         isAuthenticated: state.LoginReducer.isAuthenticated,
-        full_name: state.LoginReducer.full_name,
         Error: state.ErrorReducer,
     }
 }

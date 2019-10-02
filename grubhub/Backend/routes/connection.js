@@ -5,7 +5,17 @@ const connection = mysql.createConnection({
     user: 'node',
     password: 'node',
     database: 'grubhub'
-});
+}); 
+
+/* const connection = mysql.createPool({
+    connectionLimit: 10,
+    host: 'localhost',
+    user: 'node',
+    password: 'node',
+    database: 'grubhub'
+}) */
+
+
 connection.connect();
 
 

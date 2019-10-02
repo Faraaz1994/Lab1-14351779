@@ -26,8 +26,8 @@ class SignUp extends React.Component {
             Password: Password
         });
     }
-    displayError =()=>{
-        return(
+    displayError = () => {
+        return (
             <div class="alert alert-danger" role="alert">
                 {this.props.Error.errorText}
             </div>
@@ -63,13 +63,13 @@ class SignUp extends React.Component {
                             <label>State</label>
                             <select id="State" className="form-control" required>
                                 <option selected>Choose...</option>
+                                <option>AL</option>
+                                <option>AK</option>
+                                <option>AZ</option>
                                 <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
-                                <option>CA</option>
+                                <option>FL</option>
+                                <option>KS</option>
+                                <option>NJ</option>
                             </select>
                         </div>
                         <div className="form-group col-md-2">
@@ -89,7 +89,7 @@ class SignUp extends React.Component {
                     </div>
                     <button type="submit" className="btn btn-secondary btn-lg btn-block">Sign in</button>
                 </form>
-                {this.props.Error.isError && this.displayError() }
+                {this.props.Error.isError && this.displayError()}
             </div>
         )
 

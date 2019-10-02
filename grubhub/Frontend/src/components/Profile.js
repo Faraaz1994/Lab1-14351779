@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchProfile, updateProfile,updateImage } from './actions/LoginActions'
+import { fetchProfile, updateProfile, updateImage } from './actions/LoginActions'
 import BusyIndicator from './BusyIndicator'
 import Navbar from './Navbar'
 const axios = require('axios');
@@ -39,15 +39,15 @@ class Profile extends React.Component {
     handleImageUpload = (file) => {
         const formData = new FormData()
         formData.append(
-          'profileImage',
-          file,
-          file.name
+            'profileImage',
+            file,
+            file.name
         );
         this.props.updateImage(formData);
     }
 
     render() {
-        if (this.props.profileDetails == null || this.props.isLoading ) {
+        if (this.props.profileDetails == null || this.props.isLoading) {
             return <BusyIndicator />
         }
         return (
@@ -77,13 +77,13 @@ class Profile extends React.Component {
                             </div>
                             <div className="form-group col-md-4">
                                 <select id="State" className="form-control" required defaultValue={this.props.profileDetails[0].state} >
-                                    <option>CA</option>
+                                    <option>AL</option>
+                                    <option>AK</option>
                                     <option>AZ</option>
-                                    <option>AS</option>
-                                    <option>FG</option>
-                                    <option>QW</option>
-                                    <option>PO</option>
-                                    <option>QW</option>
+                                    <option>CA</option>
+                                    <option>FL</option>
+                                    <option>KS</option>
+                                    <option>NJ</option>
                                 </select>
                             </div>
                             <div className="form-group col-md-3">
@@ -121,7 +121,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchProfile: () => { dispatch(fetchProfile('/buyer')) },
         updateProfile: (profileDetails) => { dispatch(updateProfile(profileDetails, '/buyer')) },
-        updateImage : (image) => { dispatch(updateImage(image, '/buyer')) }
+        updateImage: (image) => { dispatch(updateImage(image, '/buyer')) }
     }
 }
 

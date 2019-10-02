@@ -1,7 +1,9 @@
 import React from 'react';
 import Navbar from './Navbar';
+import { connect } from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { Redirect } from 'react-router-dom';
 const axios = require('axios');
 
 
@@ -18,11 +20,53 @@ class DetailPage extends React.Component {
     constructor(props) {
         super(props);
         const { resturantId } = this.props.location.state;
+        this.setUp(resturantId);
+    }
+    setUp = (resturantId) =>{
         this.fetchResturantDetails(resturantId);
         this.getImage(resturantId);
     }
 
+    checkCartAvailable =()=>{
+        const { resturantId } = this.props.location.state;
+        let cart = JSON.parse(localStorage.getItem("cart_"+this.props.profileDetails[0].id));
+        if(cart && (resturantId != cart.resturantId)){
+           this.showAlertCart("You already have some items in a cart from different resturant. Do you want to remove the items?",cart.resturantId)
+        }
+        else if(cart && (resturantId == cart.resturantId)){
+            this.setState({
+                shoppingCart : cart.items
+            })
+        }
+    }
+
+    showAlertCart = (msg,resturantId) => {
+        confirmAlert({
+            title: 'Attention',
+            message: msg,
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => {
+                        this.setState({
+                            shoppingCart : []
+                        })
+                        localStorage.removeItem("cart_"+this.props.profileDetails[0].id)
+                    }
+                },
+                {
+                    label: 'No',
+                    onClick: () => { 
+                        this.props.history.push({pathname :'/SearchPage',state : {zip : "" , dish : ""} }); 
+                    }
+                }
+            ]
+        });
+    }
+
     componentDidMount() {
+
+        this.checkCartAvailable();
 
         //called before opening the modal
         window.$('#exampleModalCenter').on('show.bs.modal', function (event) {
@@ -73,9 +117,19 @@ class DetailPage extends React.Component {
 
             this.setState({
                 shoppingCart: items
-            })
+            });
             window.$.find("#inpQty")[0].value = 1;
+
+            this.storeCart(items);
         }.bind(this));
+    }
+    storeCart =(items) =>{
+        let buyer_rest ={
+            resturantId : this.props.location.state.resturantId,
+            items : items,
+            buyer_id : this.props.profileDetails[0].id
+       }
+       localStorage.setItem("cart_"+buyer_rest.buyer_id, JSON.stringify(buyer_rest));
     }
     beforeModelOpen = (event) => {
         this.setState({
@@ -90,8 +144,7 @@ class DetailPage extends React.Component {
             message: msg,
             buttons: [
                 {
-                    label: 'Ok',
-
+                    label: 'Ok'
                 }
             ]
         });
@@ -287,6 +340,7 @@ class DetailPage extends React.Component {
                         shoppingCart: []
                     });
                     that.showAlert("Order placed succesfully");
+                    localStorage.removeItem("cart_"+that.props.profileDetails[0].id)
                 }
                 else {
                     that.showAlert("Order wasnt placed. Please try again in sometime ");
@@ -318,7 +372,7 @@ class DetailPage extends React.Component {
                     <div class="clm-s" style={{ backgroundColor: "#343a40" }}>
                         <table class="table  table-dark">
                             <tbody>
-                                {this.renderShoppingCart()}
+                                {this.state.shoppingCart && this.renderShoppingCart()}
                             </tbody>
                         </table>
                         {this.state.shoppingCart.length == 0 ? null : <button type="button" class="btn btn-secondary btn-lg btn-block" onClick={this.placeOrder}>Place Order</button>}
@@ -330,5 +384,11 @@ class DetailPage extends React.Component {
     }
 }
 
-export default DetailPage
+const mapStateToProps = (state) => {
+    return {
+        profileDetails: state.ProfileReducer.profileDetails,
+    }
+}
+
+export default connect(mapStateToProps)(DetailPage)
 

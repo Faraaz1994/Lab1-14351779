@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 class NavbarResturant extends React.Component {
 
     render = () => {
+        console.log("profiledetails",this.props.profileDetails);
         return (
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <Link to="/HomePageResturant" class="navbar-brand"  >Grubhub</Link>
@@ -21,7 +22,7 @@ class NavbarResturant extends React.Component {
                     <div className="col">
                         <div class="dropdown">
                             <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Hi  {this.props.full_name}
+                                Hi  {this.props.profileDetails && this.props.profileDetails[0].merchant_name}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <Link to="/ProfileResturant" class="dropdown-item"  >Profile</Link>
@@ -38,7 +39,7 @@ class NavbarResturant extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        full_name: state.LoginReducer.full_name
+        profileDetails: state.ProfileReducer.profileDetails,
     }
 }
 
