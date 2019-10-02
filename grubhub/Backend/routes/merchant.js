@@ -266,7 +266,6 @@ router.post('/deleteitem', function (req, response) {
 
 async function authenticate(pwd, hash) {
     const match = await bcrypt.compare(pwd, hash);
-    console.log("Match", match);
     return match;
 }
 

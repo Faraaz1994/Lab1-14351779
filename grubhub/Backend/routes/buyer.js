@@ -35,13 +35,11 @@ router.post('/', function (req, response, next) {
 
     authenticate(pwd, res[0].password).then((match) => {
       if (match) {
-        console.log("authenticated");
         req.session.user = { id: res[0].id, email: res[0].email_id };
         response.cookie('cookie', "admin", { maxAge: 900000, httpOnly: false, path: '/' });
         response.json({ error: false, msg: "Succesfully logged in", details: res });
       }
       else {
-        console.log("authentication failed");
         response.json({ error: true, msg: "Invalid credentials", details: res });
       }
     })
@@ -64,7 +62,6 @@ router.post('/signup', function (req, response, next) {
 
     //Hash the password
     bcrypt.hash(Password, 10).then(function (hash) {
-      console.log("Hash generated", hash)
       let query = "INSERT INTO buyer (full_name,email_id,address_id,password) VALUES (?,?,?,?)";
       connection.query(query, [FullName, Email, res.insertId, hash], function (err, res) {
         if (err) {
@@ -84,7 +81,6 @@ router.post('/signup', function (req, response, next) {
 
 async function authenticate(pwd, hash) {
   const match = await bcrypt.compare(pwd, hash);
-  console.log("Match", match);
   return match;
 }
 
@@ -134,7 +130,7 @@ router.post("/profilePic", function (req, response) {
 
 
 router.post('/image', function (req, response, next) {
-  console.log(req.body)
+  
 });
 
 module.exports = router;

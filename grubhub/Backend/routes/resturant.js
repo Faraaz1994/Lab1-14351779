@@ -14,7 +14,6 @@ router.get('/', function (req, response, next) {
     }
     connection.query(query,[zip] ,function (err, res) {
         if (err) response.json({ error: true, msg: "Operation failed", details: err });
-        console.log(res);
         response.json({ error: false, msg: "Resturants retrived based on dish", data: res });
     })
 
@@ -22,7 +21,6 @@ router.get('/', function (req, response, next) {
 
 //get list of items offered by a resturant based on resturant id
 router.get('/id', function (req, response, next) {
-    debugger
     const { resturantId } = req.query;
     let query = "SELECT  i.id,i.name,i.description,i.section,ms.section_text,i.price,im.id as image_id,im.image_name FROM item AS i INNER JOIN " +
         "merchant_section as ms on i.section = ms.id inner join merchant " +
@@ -31,7 +29,7 @@ router.get('/id', function (req, response, next) {
 
     connection.query(query, [resturantId], function (err, res) {
         if (err) response.json({ error: true, msg: "Operation failed", details: err });
-        console.log(res);
+        
         response.json({ error: false, msg: "Resturants details retrived based on id", data: res });
     })
 
@@ -45,7 +43,7 @@ router.get('/resturantimage', function (req, response, next) {
             response.json({ error: true, msg: "Operation failed", details: err });
             return
         }
-        console.log(res);
+        
         response.json({ error: false, msg: "Resturants image retrived based on id", data: res });
     })
 
