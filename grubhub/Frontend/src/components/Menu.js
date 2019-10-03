@@ -7,6 +7,7 @@ import {
 import NavbarResturant from './NavbarResturant'
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { element } from 'prop-types';
 class Menu extends React.Component {
 
 
@@ -14,7 +15,6 @@ class Menu extends React.Component {
         this.props.fetchSection();
     }
     handleSection = (event) => {
-        debugger;
         if (window.$('.nav-tabs .active').length == 0) {
             window.$('.nav-tabs')[0].firstElementChild.classList.toggle("active");
         }
@@ -25,6 +25,9 @@ class Menu extends React.Component {
         this.props.fetchItems(event.target.value);
     }
     renderSection = () => {
+        if(!this.props.sections){
+            return null
+        }
         let listItem = [];
         let sections = this.props.sections;
         let cls;
@@ -46,8 +49,16 @@ class Menu extends React.Component {
             }
         }
     }
-    handleSectionAdd = () => {
-        this.props.addSection(document.getElementById("sectionText").value);
+    handleSectionAdd = (event) => {
+        let sectionText = document.getElementById("sectionText").value;
+        if(sectionText){
+            this.props.addSection(sectionText);
+        }
+        else{
+            event.preventDefault();
+            this.showAlert("Section text cannot be empty");
+        }
+            
     }
     openModal = () => {
         return (
@@ -61,7 +72,7 @@ class Menu extends React.Component {
                             </button>
                         </div>
                         <div class="modal-body">
-                            <input type="text" id="sectionText" style={{ width: "100%" }} />
+                            <input type="text" id="sectionText" style={{ width: "100%" }} maxLength="15" required/>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -123,8 +134,8 @@ class Menu extends React.Component {
             cards.push(<div class="card" >
                 <img class="card-img-top" alt="" />
                 <div class="card-body">
-                    <p><input class="card-title" placeholder="Enter name" name="name" className="hide"></input></p>
-                    <p><input class="card-text" placeholder="Enter description" name="description" className="hide"></input></p>
+                    <p><input class="card-title" placeholder="Enter name" name="name" className="hide" maxLength="20"></input></p>
+                    <p><input class="card-text" placeholder="Enter description" name="description" className="hide" maxLength="30"></input></p>
                     <p><input placeholder="Enter price" className="hide" name="price" type="number" max="100" min="1"
                         style={{ width: "10.6rem" }}></input></p>
                     <button type="button" class="btn btn-primary" onClick={this.handleItemAdd} >
@@ -174,6 +185,11 @@ class Menu extends React.Component {
                 this.showAlert("Enter all the requred fields", "Error");
                 return;
             }
+            if(action == "save" && elements[i].name == "price" 
+               && ( !parseFloat(elements[i].value) || parseFloat(elements[i].value) < 1)) {
+                this.showAlert("Enter valid price", "Error");
+                return;
+            }
             elements[i].classList.toggle("show");
         }
         if (action === "save") {
@@ -196,8 +212,8 @@ class Menu extends React.Component {
         });
     }
     handleRemoveSection = () => {
-        console.log("remove")
-        this.props.removeSection(window.$('.nav-tabs .active')[0].firstElementChild.value);
+        if (window.$('.nav-tabs .active')[0])
+            this.props.removeSection(window.$('.nav-tabs .active')[0].firstElementChild.value);
     }
     render() {
         return (
@@ -206,7 +222,7 @@ class Menu extends React.Component {
                 <div class="card text-center" >
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs">
-                            {this.props.sections && this.renderSection()}
+                            {this.renderSection()}
                             <div style={{ position: "absolute", right: "0" }} >
                                 <button class="btn" data-toggle="modal" data-target="#exampleModalCenter"> Add Section</button>
                                 <button class="btn" style={this.setStyle()} onClick={this.handleRemoveSection} >Remove Section</button>

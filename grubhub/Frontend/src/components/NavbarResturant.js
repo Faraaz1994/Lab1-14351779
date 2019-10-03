@@ -7,7 +7,7 @@ class NavbarResturant extends React.Component {
         console.log("profiledetails",this.props.profileDetails);
         return (
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <Link to="/HomePageResturant" class="navbar-brand"  >Grubhub</Link>
+                <Link to="/HomePageResturant" class="navbar-brand"  >GRUBHUB</Link>
                 <div class="collapse navbar-collapse" id="navbarText" >
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">

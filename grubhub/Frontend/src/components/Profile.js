@@ -60,18 +60,18 @@ class Profile extends React.Component {
                     <form onSubmit={this.handleupdate}>
                         <div className="form-row">
                             <div className="form-group col-md-12">
-                                <input type="text" className="form-control" name="full_name"
+                                <input type="text" className="form-control" name="full_name" maxLength="30"
                                     id="FName" required defaultValue={this.props.profileDetails[0].full_name}
                                 />
                             </div>
                         </div>
                         <div className="form-group">
-                            <input type="text" className="form-control" id="Address"
+                            <input type="text" className="form-control" id="Address" maxLength="50"
                                 required defaultValue={this.props.profileDetails[0].street} name="street" />
                         </div>
                         <div className="form-row">
                             <div className="form-group col-md-5">
-                                <input type="text" className="form-control" id="City" name="city"
+                                <input type="text" className="form-control" id="City" name="city" maxLength="15"
                                     required defaultValue={this.props.profileDetails[0].city} />
 
                             </div>
@@ -87,7 +87,7 @@ class Profile extends React.Component {
                                 </select>
                             </div>
                             <div className="form-group col-md-3">
-                                <input type="text" className="form-control" id="Zip" name="zipcode"
+                                <input type="text" className="form-control" id="Zip" name="zipcode" maxLength="6"
                                     required defaultValue={this.props.profileDetails[0].zipcode} />
                             </div>
                         </div>
@@ -97,7 +97,7 @@ class Profile extends React.Component {
                                     defaultValue={this.props.profileDetails[0].email_id} name="email_id" />
                             </div>
                             <div className="form-group col-md-12">
-                                <input type="text" className="form-control" id="mobileno" name="mobile_no"
+                                <input type="text" className="form-control" id="mobileno" name="mobile_no" maxLength="10"
                                     placeholder="Mobile number" required defaultValue={this.props.profileDetails[0].mobile_no} />
                             </div>
                         </div>

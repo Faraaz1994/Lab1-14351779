@@ -3,7 +3,6 @@ import Navbar from './Navbar';
 import { connect } from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { Redirect } from 'react-router-dom';
 const axios = require('axios');
 
 
@@ -31,7 +30,7 @@ class DetailPage extends React.Component {
         const { resturantId } = this.props.location.state;
         let cart = JSON.parse(localStorage.getItem("cart_"+this.props.profileDetails[0].id));
         if(cart && (resturantId != cart.resturantId)){
-           this.showAlertCart("You already have some items in a cart from different resturant. Do you want to remove the items?",cart.resturantId)
+           this.showAlertCart("You already have some items in a cart from different resturant. Do you want to remove the items?")
         }
         else if(cart && (resturantId == cart.resturantId)){
             this.setState({
@@ -40,7 +39,7 @@ class DetailPage extends React.Component {
         }
     }
 
-    showAlertCart = (msg,resturantId) => {
+    showAlertCart = (msg) => {
         confirmAlert({
             title: 'Attention',
             message: msg,

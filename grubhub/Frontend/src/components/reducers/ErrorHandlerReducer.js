@@ -1,4 +1,4 @@
-import { LOGERROR } from "../actions/action-types/ActionTypes";
+import { LOGERROR, RESOLVEERROR } from "../actions/action-types/ActionTypes";
 
 
 const initState = {
@@ -9,9 +9,16 @@ const initState = {
 const ErrorReducer = (state = initState, action) => {
     if (action.type === LOGERROR) {
         return {
-            isError : true,
-            errorText : action.error
+            isError: true,
+            errorText: action.error
         }
+    }
+    else if (action.type === RESOLVEERROR) {
+        return {
+            isError: false,
+            errorText: null
+        }
+
     }
     return state
 

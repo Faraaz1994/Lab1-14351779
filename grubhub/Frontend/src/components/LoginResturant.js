@@ -2,7 +2,9 @@ import { Link, Redirect } from 'react-router-dom';
 import React from 'react';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
-import { authenticateLogin } from './actions/LoginActions'
+import { authenticateLogin,resolveError } from './actions/LoginActions'
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 class Login extends React.Component {
     handleLogin = (event) => {
@@ -11,12 +13,22 @@ class Login extends React.Component {
         const pwd = document.getElementById("password").value;
         this.props.authenticateLogin(email, pwd);
     }
+    componentDidUpdate = ()=>{
+        if(this.props.Error.isError){
+            this.displayError()
+        }
+    }
     displayError = () => {
-        return (
-            <div class="alert alert-danger" role="alert">
-                {this.props.Error.errorText}
-            </div>
-        )
+        let that = this;
+        confirmAlert({
+            title: 'Warning',
+            message: that.props.Error.errorText,
+            buttons: [
+                {
+                    label: 'Yes'
+                }
+            ]
+        });
     }
     render = () => {
         if (this.props.isAuthenticated || cookie.load('cookie')) {
@@ -53,7 +65,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        authenticateLogin: (email, pwd) => { dispatch(authenticateLogin(email, pwd, '/merchant')) }
+        authenticateLogin: (email, pwd) => { dispatch(authenticateLogin(email, pwd, '/merchant')) },
+        resolveError: () => { dispatch(resolveError()) }
     }
 }
 

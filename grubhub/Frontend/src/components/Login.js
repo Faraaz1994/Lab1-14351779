@@ -2,7 +2,9 @@ import { Link, Redirect } from 'react-router-dom';
 import React from 'react';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
-import { authenticateLogin } from './actions/LoginActions'
+import { authenticateLogin, resolveError } from './actions/LoginActions'
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 
 class Login extends React.Component {
@@ -12,12 +14,23 @@ class Login extends React.Component {
         const pwd = document.getElementById("password").value;
         this.props.authenticateLogin(email, pwd);
     }
-    displayError =()=>{
-        return(
-            <div class="alert alert-danger" role="alert">
-                {this.props.Error.errorText}
-            </div>
-        )
+    componentDidUpdate = ()=>{
+        if(this.props.Error.isError){
+            this.displayError()
+        }
+    }
+    displayError = () => {
+        let that = this;
+        confirmAlert({
+            title: 'Warning',
+            message: that.props.Error.errorText,
+            buttons: [
+                {
+                    label: 'OK',
+                    onClick: () => { that.props.resolveError() }
+                }
+            ]
+        });
     }
     render = () => {
         if (this.props.isAuthenticated || cookie.load('cookie')) {
@@ -39,7 +52,6 @@ class Login extends React.Component {
                     </form>
                     <Link to="/signup" className="loginLink">Create an account</Link>
                     <Link to="/LoginResturant" className="loginLink">Resturants</Link>
-                    {this.props.Error.isError && this.displayError() }
                 </div >
             )
         }
@@ -55,7 +67,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        authenticateLogin: (email, pwd) => { dispatch(authenticateLogin(email, pwd, '/buyer')) }
+        authenticateLogin: (email, pwd) => { dispatch(authenticateLogin(email, pwd, '/buyer')) },
+        resolveError: () => { dispatch(resolveError()) }
     }
 }
 

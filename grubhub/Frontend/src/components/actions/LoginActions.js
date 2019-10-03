@@ -223,7 +223,7 @@ export const changeOrderStatus = (orderId, status) => {
                 else {
                     dispatch(resolveError())
                 }
-                dispatch(fetchOrders());
+                dispatch(fetchOrders([1,2,3]));
             })
             .catch(function (error) {
                 dispatch(isLoading(false));

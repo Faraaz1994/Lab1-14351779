@@ -1,7 +1,10 @@
 import { Redirect } from 'react-router-dom';
 import React from 'react';
 import { connect } from 'react-redux';
-import { createProfile } from './actions/LoginActions';
+import { createProfile,resolveError } from './actions/LoginActions';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
 
 class SignUpResturant extends React.Component {
 
@@ -27,12 +30,23 @@ class SignUpResturant extends React.Component {
             RName: RName
         });
     }
+    componentDidUpdate = ()=>{
+        if(this.props.Error.isError){
+            this.displayError()
+        }
+    }
     displayError = () => {
-        return (
-            <div class="alert alert-danger" role="alert">
-                {this.props.Error.errorText}
-            </div>
-        )
+        let that = this;
+        confirmAlert({
+            title: 'Warning',
+            message: that.props.Error.errorText,
+            buttons: [
+                {
+                    label: 'OK',
+                    onClick: () => { that.props.resolveError() }
+                }
+            ]
+        });
     }
 
     render = () => {
@@ -45,25 +59,25 @@ class SignUpResturant extends React.Component {
                     <div className="form-row">
                         <div className="form-group col-md-6">
                             <label>First Name</label>
-                            <input type="text" className="form-control" id="FName" placeholder="First Name" required />
+                            <input type="text" className="form-control" id="FName" placeholder="First Name" required maxLength="15"/>
                         </div>
                         <div className="form-group col-md-6">
                             <label >Last Name</label>
-                            <input type="text" className="form-control" id="LName" placeholder="Last Name" required />
+                            <input type="text" className="form-control" id="LName" placeholder="Last Name" required maxLength="15" />
                         </div>
                     </div>
                     <div className="form-group">
                         <label>Resturant name</label>
-                        <input type="text" className="form-control" id="RName" placeholder="Resturant Name" required />
+                        <input type="text" className="form-control" id="RName" placeholder="Resturant Name" required maxLength="30"/>
                     </div>
                     <div className="form-group">
                         <label>Address</label>
-                        <input type="text" className="form-control" id="Address" placeholder="1234 Main St" required />
+                        <input type="text" className="form-control" id="Address" placeholder="1234 Main St" required maxLength="30"/>
                     </div>
                     <div className="form-row">
                         <div className="form-group col-md-6">
                             <label >City</label>
-                            <input type="text" className="form-control" id="City" required />
+                            <input type="text" className="form-control" id="City" required maxLength="15"/>
                         </div>
                         <div className="form-group col-md-4">
                             <label>State</label>
@@ -80,7 +94,7 @@ class SignUpResturant extends React.Component {
                         </div>
                         <div className="form-group col-md-2">
                             <label >Zip</label>
-                            <input type="text" className="form-control" id="Zip" required />
+                            <input type="text" className="form-control" id="Zip" required maxLength="6"/>
                         </div>
                     </div>
                     <div className="form-row">
@@ -95,7 +109,6 @@ class SignUpResturant extends React.Component {
                     </div>
                     <button type="submit" className="btn btn-secondary btn-lg btn-block" >Sign in</button>
                 </form>
-                {this.props.Error.isError && this.displayError()}
             </div>
         )
 
@@ -111,7 +124,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        createProfile: (profileDetails) => { dispatch(createProfile(profileDetails, '/merchant')) }
+        createProfile: (profileDetails) => { dispatch(createProfile(profileDetails, '/merchant')) },
+        resolveError: () => { dispatch(resolveError()) }
     }
 }
 

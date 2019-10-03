@@ -8,7 +8,7 @@ class Navbar extends React.Component {
         console.log("profiledetails",this.props.profileDetails);
         return (
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <Link to="/HomePage" class="navbar-brand"  >Grubhub</Link>
+                <Link to="/HomePage" class="navbar-brand"  >GRUBHUB</Link>
                 <div class="collapse navbar-collapse" id="navbarText" />
                 <form class="form-inline my-2 my-lg-0">
                     <div className="col">
