@@ -4,6 +4,7 @@ import Navbar from './Navbar'
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchResturant, fetchCuisine } from './actions/LoginActions';
+const axios = require('axios');
 
 
 class SearchPage extends React.Component {
@@ -28,7 +29,7 @@ class SearchPage extends React.Component {
     }
     handleFilter = (event) => {
         let value = event.target.value;
-        if(value =="All"){
+        if (value == "All") {
             value = ""
         }
         window.$("#table tr").filter(function () {
@@ -38,9 +39,7 @@ class SearchPage extends React.Component {
         });
     }
     renderCuisineDropDown = () => {
-        debugger
-
-        let items = [{cuisine : "All"}];
+        let items = [{ cuisine: "All" }];
         items.push(...this.props.cuisine);
         return items.map((item) => {
             return (<button class="dropdown-item" value={item.cuisine} onClick={this.handleFilter}>{item.cuisine}</button>)
@@ -57,12 +56,12 @@ class SearchPage extends React.Component {
             )
         }
         return rows.map((resturant, index) => {
-            const { id, resturant_name, cuisine } = resturant;
+            const { id, resturant_name, cuisine,image_name } = resturant;
             return (
                 <tr onClick={this.handleResturantClick} data-resturantid={id} data-resturant_name={resturant_name} data-cuisine={cuisine}>
                     <th className="searchPageTD" scope="row">{index + 1}</th>
                     <td className="w-25 searchPageTD">
-                        <img src={img5} className="img-fluid img-thumbnail searchPageImageThumbnail" alt="" />
+                        <img src={image_name} className="img-fluid img-thumbnail searchPageImageThumbnail" alt="" />
                     </td>
                     <td className="searchPageTD">
                         {resturant_name}
@@ -136,7 +135,6 @@ class SearchPage extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state, "State")
     return {
         resturants: state.ResturantReducer.resturants,
         cuisine: state.ResturantReducer.cuisine

@@ -5,13 +5,15 @@ var connection = require('./connection')
 //get list of resturants based on dish and zip
 router.get('/', function (req, response, next) {
     const { zip, dish } = req.query;
-    let query = "select distinct m.id,m.resturant_name,m.cuisine from item as i inner join " +
+    let query = "select m.id,m.resturant_name,m.cuisine,any_value(im.image_name) as image_name from item as i inner join " +
     "merchant_section as ms on i.section = ms.id inner join merchant " +
     "as m on ms.merchant_id = m.id inner join address as a on m.address_id = a.id "+
-    "where i.name like '" + dish + "%'"
+    "left outer join image as im on im.merchant_id  = m.id "+
+    "where i.name like '" + dish + "%' "
     if(zip){
         query += " and zipcode = ?";
     }
+    query += " group by m.id ";
     connection.query(query,[zip] ,function (err, res) {
         if (err) response.json({ error: true, msg: "Operation failed", details: err });
         response.json({ error: false, msg: "Resturants retrived based on dish", data: res });
